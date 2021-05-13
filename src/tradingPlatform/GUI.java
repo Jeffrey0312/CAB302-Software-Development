@@ -2,6 +2,8 @@ package tradingPlatform;
 
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +17,7 @@ public class GUI extends JFrame {
     {
         JFrame frame = new JFrame("Trading Platform");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600);
+        frame.setSize(900, 600);
 
         //tabs
         JTabbedPane pane = new JTabbedPane();
@@ -129,9 +131,11 @@ public class GUI extends JFrame {
 //            l.setLabelFor(textField);
 //            p.add(textField);
 //        }
-//        contentPanel.add(p);
+//        panel3.add(p);
 //        //Lay out the panel.
 //        SpringUtilities.makeCompactGrid(p, numPairs, 2, 6, 6, 6, 6);
+
+
 
 
         //add text area
@@ -155,6 +159,8 @@ public class GUI extends JFrame {
         panel3.add(L7);
         panel3.add(L7_1);
 
+        JButton createButton=new JButton("Create SELL offer");
+        panel3.add(createButton);
 //        panel3.add(contentPanel);
 
 
@@ -165,6 +171,8 @@ public class GUI extends JFrame {
         frame.getContentPane().add(BorderLayout.CENTER, pane);
         frame.setVisible(true);
     }
+
+
 
 
 }

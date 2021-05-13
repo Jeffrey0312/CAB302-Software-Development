@@ -2,9 +2,11 @@ package tradingPlatform;
 
 import javax.swing.*;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 public class Main {
     public static void main(String[] args) {
-        new GUI();
-//        SwingUtilities.invokeLater(new GUI("BorderLayout"));
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        invokeLater(new UserGUI("Electronic Asset Trading Platform"));
     }
 }
