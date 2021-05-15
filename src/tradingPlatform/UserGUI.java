@@ -15,7 +15,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
     private JMenu account;
     private JMenuBar menuBar;
     private JMenuItem changePassword, logout;
-    private JTextField resourceType, estimateCredits, salesAmount, credits;
+    private JTextField resourceType, estimateCredits, salesAmount, credits, resourceAmount;
 
     public UserGUI(String title) throws HeadlessException {
         super(title);
@@ -58,10 +58,11 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
 
     private void addTabbedPane() {
         tabbedPane = new JTabbedPane();
-        //tabbedPane.setBackground(Color.decode("#8a8a8a"));
+        tabbedPane.setBackground(Color.decode("#8a8a8a"));
         ResourcePane(tabbedPane);
         OfferPane(tabbedPane);
         SellPane(tabbedPane);
+        BuyPane(tabbedPane);
 
     }
 
@@ -69,12 +70,13 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
     private void ResourcePane(JTabbedPane tabbedPane) {
         Container resource = new Container();
         tabbedPane.addTab("Resource", resource);
-        //resource.setBackground(Color.decode("#c8ddf2"));
+        resource.setBackground(Color.decode("#c8ddf2"));
         resource.setLayout(new BoxLayout(resource, BoxLayout.Y_AXIS));
 
         resource.add(searchFieldPanel());
         resource.add(buttonFieldPanel());
         resource.add(resourceScrollPane());
+        resource.add(buttonFieldPanel_3());
     }
 
     private JPanel searchFieldPanel() {
@@ -89,21 +91,19 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
     }
 
     private JPanel buttonFieldPanel() {
-        JPanel buttonField = new JPanel();
-        buttonField.setBackground(Color.decode("#c8ddf2"));
+        JPanel resourceButtonField = new JPanel();
+        resourceButtonField.setBackground(Color.decode("#c8ddf2"));
         JButton button_1 = new JButton("Computational Resource");
         JButton button_2 = new JButton("Hardware Resource");
         JButton button_3 = new JButton("Software Resource");
-        buttonField.add(button_1);
-        buttonField.add(button_2);
-        buttonField.add(button_3);
-        buttonField.setMaximumSize(new Dimension(1000, 80));
-        return buttonField;
+        resourceButtonField.add(button_1);
+        resourceButtonField.add(button_2);
+        resourceButtonField.add(button_3);
+        resourceButtonField.setMaximumSize(new Dimension(1000, 50));
+        return resourceButtonField;
     }
 
-    private JPanel resourceScrollPane() {
-        JPanel scrollField = new JPanel();
-        scrollField.setBackground(Color.decode("#c8ddf2"));
+    private JScrollPane resourceScrollPane() {
         String data[][] = {
                 {"101", "Amit123", "Amit", "Jack", "Sales", "$670000"},
                 {"102", "Jai007", "Jai", "Spring", "Human Resource", "$780000"},
@@ -112,17 +112,26 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
         String column[] = {"ID", "USERNAME", "FIRST NAME", "LAST NAME", "ORGANIZATION", "CURRENT PRICE"};
         resourceTable = new JTable(data, column);
         JScrollPane scrollPane = new JScrollPane(resourceTable);
+
         scrollPane.setViewportView(resourceTable);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setMinimumSize(new Dimension(400, 150));
         scrollPane.setPreferredSize(new Dimension(450, 150));
-        scrollPane.setMaximumSize(new Dimension(1000, 200));
-        scrollField.add(scrollPane);
+        scrollPane.setMaximumSize(new Dimension(700, 200));
 
-        return scrollField;
+        return scrollPane;
 
     }
+    private JPanel buttonFieldPanel_3() {
+        JPanel resourceBuyButtonField = new JPanel();
+        JButton button_5 = new JButton("BUY");
+        resourceBuyButtonField.add(button_5);
+        resourceBuyButtonField.setMaximumSize(new Dimension(700, 50));
+        return resourceBuyButtonField;
+    }
+
+
 
     //start of the offer page
     private void OfferPane(JTabbedPane tabbedPane) {
@@ -168,22 +177,21 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
         return scrollPane_2;
     }
     private JPanel offerButtonFieldPanel() {
-        JPanel buttonField_2 = new JPanel();
+        JPanel offerButtonField = new JPanel();
         JButton buyButton = new JButton("Edit");
         JButton sellButton = new JButton("Remove");
 
-        buttonField_2.add(buyButton);
-        buttonField_2.add(sellButton);
-        buttonField_2.setMaximumSize(new Dimension(500, 50));
-        buttonField_2.setBackground(Color.decode("#c8ddf2"));
-        return buttonField_2;
+        offerButtonField.add(buyButton);
+        offerButtonField.add(sellButton);
+        offerButtonField.setMaximumSize(new Dimension(700, 50));
+        return offerButtonField;
     }
 
 
     //start of the sell page
     private void SellPane(JTabbedPane tabbedPane) {
         Container sell = new Container();
-        tabbedPane.addTab("BUY&SELL", sell);
+        tabbedPane.addTab("SELL", sell);
         sell.setBackground(Color.decode("#0b2862"));
         sell.setLayout(new BoxLayout(sell, BoxLayout.Y_AXIS));
         sell.add(titlePanel());
@@ -192,14 +200,14 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
     }
 
     private JPanel titlePanel(){
-        JPanel title = new JPanel();
-        title.setBackground(Color.decode("#0b2862"));
+        JPanel sellTitle = new JPanel();
+        sellTitle.setBackground(Color.decode("#0b2862"));
         JLabel L1 = new JLabel("Resource Title");
         L1.setFont(new Font("Verdana", Font.BOLD, 24));
         L1.setForeground(Color.WHITE);
-        title.add(L1);
-        title.setMaximumSize(new Dimension(500, 50));
-        return  title;
+        sellTitle.add(L1);
+        sellTitle.setMaximumSize(new Dimension(500, 50));
+        return  sellTitle;
     }
 
     private JPanel contentPanel(){
@@ -255,7 +263,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
                 .addComponent(estimateCreditsFieldLabel)
                 .addComponent(estimateCredits));
         layout.setVerticalGroup(vGroup);
-        content.setMaximumSize(new Dimension(500, 150));
+        content.setMaximumSize(new Dimension(500, 190));
         content.setBackground(Color.WHITE);
 
         return content;
@@ -264,17 +272,81 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
 
     private JPanel buttonFieldPanel_2() {
         JPanel buttonField_2 = new JPanel();
-        JButton buyButton = new JButton("BUY");
         JButton sellButton = new JButton("SELL");
-
-        buttonField_2.add(buyButton);
         buttonField_2.add(sellButton);
         buttonField_2.setMaximumSize(new Dimension(500, 50));
         buttonField_2.setBackground(Color.WHITE);
         return buttonField_2;
     }
 
+    //start og the buy page
+    private void BuyPane(JTabbedPane tabbedPane) {
+        Container buy = new Container();
+        tabbedPane.addTab("BUY", buy);
+        buy.setBackground(Color.decode("#0b2862"));
+        buy.setLayout(new BoxLayout(buy, BoxLayout.Y_AXIS));
+        buy.add(BuyTitlePanel());
+        buy.add(buyContentPanel());
+        buy.add(buttonFieldPanel_4());
+    }
 
+    private JPanel BuyTitlePanel(){
+        JPanel buyTitle = new JPanel();
+        buyTitle.setBackground(Color.decode("#0b2862"));
+        JLabel L1 = new JLabel("Buy Resource");
+        L1.setFont(new Font("Verdana", Font.BOLD, 24));
+        L1.setForeground(Color.WHITE);
+        buyTitle.add(L1);
+        buyTitle.setMaximumSize(new Dimension(500, 50));
+        return  buyTitle;
+    }
+
+    private JPanel buyContentPanel() {
+        JPanel buyContent = new JPanel();
+        GroupLayout layout = new GroupLayout(buyContent);
+        buyContent.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+
+        String[] buySourceList = {"", "Hard Disk", "RAM"};
+        JLabel resourceNameFieldLabel = new JLabel("Resource Name: ");
+        JLabel resourceAmountFieldLabel = new JLabel("Resource Amount: ");
+        resourceAmount = new JTextField(20);
+        JComboBox buyResourceList = new JComboBox(buySourceList);
+        GroupLayout.SequentialGroup hGroup_1 = layout.createSequentialGroup();
+        hGroup_1.addGroup(layout.createParallelGroup()
+                .addComponent(resourceNameFieldLabel)
+                .addComponent(resourceAmountFieldLabel));
+        hGroup_1.addGroup(layout.createParallelGroup()
+                .addComponent(resourceAmount)
+                .addComponent(buyResourceList));
+        layout.setHorizontalGroup(hGroup_1);
+
+        GroupLayout.SequentialGroup vGroup_1 = layout.createSequentialGroup();
+        vGroup_1.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(resourceNameFieldLabel)
+                .addComponent(buyResourceList));
+        vGroup_1.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(resourceAmountFieldLabel)
+                .addComponent(resourceAmount));
+
+        layout.setVerticalGroup(vGroup_1);
+        buyContent.setMaximumSize(new Dimension(500, 190));
+        buyContent.setBackground(Color.WHITE);
+
+        return buyContent;
+
+    }
+
+    private JPanel buttonFieldPanel_4() {
+        JPanel buyButtonField = new JPanel();
+        JButton sellButton = new JButton("BUY");
+        buyButtonField.add(sellButton);
+        buyButtonField.setMaximumSize(new Dimension(500, 50));
+        buyButtonField.setBackground(Color.WHITE);
+        return buyButtonField;
+    }
 
 
     /**
@@ -284,6 +356,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+
 
     }
 
