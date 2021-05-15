@@ -58,7 +58,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
 
     private void addTabbedPane() {
         tabbedPane = new JTabbedPane();
-        tabbedPane.setBackground(Color.decode("#8a8a8a"));
+        //tabbedPane.setBackground(Color.decode("#8a8a8a"));
         ResourcePane(tabbedPane);
         OfferPane(tabbedPane);
         SellPane(tabbedPane);
@@ -69,7 +69,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
     private void ResourcePane(JTabbedPane tabbedPane) {
         Container resource = new Container();
         tabbedPane.addTab("Resource", resource);
-        resource.setBackground(Color.decode("#c8ddf2"));
+        //resource.setBackground(Color.decode("#c8ddf2"));
         resource.setLayout(new BoxLayout(resource, BoxLayout.Y_AXIS));
 
         resource.add(searchFieldPanel());
@@ -97,11 +97,13 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
         buttonField.add(button_1);
         buttonField.add(button_2);
         buttonField.add(button_3);
-        buttonField.setMaximumSize(new Dimension(500, 80));
+        buttonField.setMaximumSize(new Dimension(1000, 80));
         return buttonField;
     }
 
-    private JScrollPane resourceScrollPane() {
+    private JPanel resourceScrollPane() {
+        JPanel scrollField = new JPanel();
+        scrollField.setBackground(Color.decode("#c8ddf2"));
         String data[][] = {
                 {"101", "Amit123", "Amit", "Jack", "Sales", "$670000"},
                 {"102", "Jai007", "Jai", "Spring", "Human Resource", "$780000"},
@@ -115,10 +117,10 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setMinimumSize(new Dimension(400, 150));
         scrollPane.setPreferredSize(new Dimension(450, 150));
-        scrollPane.setMaximumSize(new Dimension(700, 200));
+        scrollPane.setMaximumSize(new Dimension(1000, 200));
+        scrollField.add(scrollPane);
 
-
-        return scrollPane;
+        return scrollField;
 
     }
 
