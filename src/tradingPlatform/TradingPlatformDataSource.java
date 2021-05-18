@@ -7,5 +7,4 @@ import java.util.Set;
  * application.
  */
 public interface TradingPlatformDataSource {
-
 }
