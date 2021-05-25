@@ -1,11 +1,14 @@
 package tradingPlatform;
 
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
+
 public class OrganisationalUnit implements TradingPlatform{
 
     private String organisation;
     private int credits;
-    private String[] assets;
-    private int[] assets_amount;
+    private HashMap<String, Integer> assets;
 
     /**
      * no argument constructor
@@ -15,104 +18,72 @@ public class OrganisationalUnit implements TradingPlatform{
     }
     /**
      * Constructor to set the values of
-     * @param organisation
-     * @param credits
-     * @param assets
-     * @param assets_amount
+     * @param organisation name of the organisation
+     * @param credits amount of credits the organisation has
+     * @param assets the amounts of each asset the organisation has
      * */
-    public OrganisationalUnit(String organisation, int credits, String[] assets, int[] assets_amount){
+    public OrganisationalUnit(String organisation, int credits, HashMap<String, Integer> assets){
         this.organisation = organisation;
         this.credits = credits;
         this.assets = assets;
-        this.assets_amount = assets_amount;
     }
 
     /**
      * returns the organisations name
      * @return organisation
      */
-    public String getOrganisation(){return this.organisation;
+    public String getName(){return this.organisation;
     }
 
     /**
      * sets the organisations name to the input
-     * @param organisation
+     * @param organisation new name of the organisation
      */
-    public void setOrganisation(String organisation){this.organisation = organisation;
+    public void setName(String organisation){this.organisation = organisation;
     }
 
     /**
      * returns the organisations credits
-     * @return credits
+     * @return integer amount of assets
      */
     public int getCredits(){return this.credits;
     }
 
     /**
      * sets the organisations credits to the input
-     * @param credits
+     * @param credits amount
      */
     public void setCredits(int credits){this.credits = credits;
     }
 
     /**
-     * returns the assets the organisation is associated with
-     * @return assets
+     * returns the assets the organisation's assets
+     * @return Hashmap of Assets
      */
-    public String[] getAssets(){return this.assets;
+    public HashMap<String,Integer> getAssets(){return this.assets;
     }
 
     /**
      * sets the what assets the organisation is associated with
-     * @param assets
+     * @param assets new Hashmap of Assets
      */
-    public void setAssets(String[] assets){this.assets = assets;
+    public void setAssets(HashMap<String, Integer> assets){this.assets = assets;
     }
 
     /**
-     * returns the asset at the given index
-     * @param index
-     * @return
+     * returns the amount of the given asset
+     * @param asset name of the asset
+     * @return the amount of the that asset the organisation has
      */
-    public String getAsset(int index){return this.assets[index];
+    public int getAssetAmount(String asset){return this.assets.get(asset);
     }
 
     /**
-     * sets the asset at the given index equal to the new asset
-     * @param asset
-     * @param index
+     * sets the amount of the asset to the new amount
+     * @param asset asset to be changed
+     * @param amount amount to be set to
      */
-    public void setAsset(String asset, int index){this.assets[index] = asset;
-    }
-
-    /**
-     * returns the amount of each asset the organisation has
-     * @return
-     */
-    public int[] getAssets_amount(){return this.assets_amount;
-    }
-
-    /**
-     * sets the amount of assets the organisation has
-     * @param assets_amount
-     */
-    public void setAssets_amount(int[] assets_amount){this.assets_amount = assets_amount;
-    }
-
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public int getAsset_amount(int index){return this.assets_amount[index];
-    }
-
-    /**
-     *
-     * @param asset_amount
-     * @param index
-     */
-    public void setAsset_amount(int asset_amount, int index){this.assets_amount[index] = asset_amount;
+    public void setAsset(String asset, int amount){this.assets.replace(asset,amount);
     }
 
     /** Buys an asset
