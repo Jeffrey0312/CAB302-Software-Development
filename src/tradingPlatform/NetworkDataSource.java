@@ -56,7 +56,7 @@ public class NetworkDataSource implements TradingPlatformDataSource{
     }
 
     @Override
-    public void setCredits(String name, int credits) {
+    public void setOrganisationCredits(String name, int credits) {
 
     }
 

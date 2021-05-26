@@ -26,13 +26,13 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String GET_ORGANISATIONS_List = "SELECT organisation FROM organisations";
     private static final String GET_ORGANISATION = "SELECT * FROM organisations WHERE organisation=?";
     private static final String DELETE_ORGANISATION = "DELETE FROM organisations WHERE organisation=?";
-    private static final String UPDATE_CREDITS = "UPDATE organisations SET credits = ? WHERE organisation = ?";
+    private static final String UPDATE_ORGANISATION_CREDITS = "UPDATE organisations SET credits = ? WHERE organisation = ?";
 
     private PreparedStatement addOrganisation;
     private PreparedStatement getOrganisationsList;
     private PreparedStatement getOrganisation;
     private PreparedStatement deleteOrganisation;
-    private PreparedStatement setCredits;
+    private PreparedStatement setOrganisationCredits;
 
 
     public static final String CREATE_TABLE_ASSETS =
@@ -123,7 +123,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             getOrganisationsList = connection.prepareStatement(GET_ORGANISATIONS_List);
             getOrganisation = connection.prepareStatement(GET_ORGANISATION);
             deleteOrganisation = connection.prepareStatement(DELETE_ORGANISATION);
-            setCredits = connection.prepareStatement(UPDATE_CREDITS);
+            setOrganisationCredits = connection.prepareStatement(UPDATE_ORGANISATION_CREDITS);
 
             addOrganisationAsset = connection.prepareStatement(INSERT_ORGANISATION_ASSET);
             getAssets = connection.prepareStatement(GET_ASSETS);
@@ -205,11 +205,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     @Override
-    public void setCredits(String name, int credits) {
+    public void setOrganisationCredits(String name, int credits) {
         try{
-            setCredits.setString(1,name);
-            setCredits.setString(2,String.valueOf(credits));
-            setCredits.execute();
+            setOrganisationCredits.setString(1,name);
+            setOrganisationCredits.setString(2,String.valueOf(credits));
+            setOrganisationCredits.execute();
         } catch(SQLException ex){
             ex.printStackTrace();
         }
@@ -218,10 +218,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     @Override
     public void setOrganisationAssetAmount(String organisation, String asset, int amount) {
         try{
-            setCredits.setString(1,String.valueOf(amount));
-            setCredits.setString(2,organisation);
-            setCredits.setString(3,asset);
-            setCredits.execute();
+            setOrganisationAssetAmount.setString(1,String.valueOf(amount));
+            setOrganisationAssetAmount.setString(2,organisation);
+            setOrganisationAssetAmount.setString(3,asset);
+            setOrganisationAssetAmount.execute();
         } catch(SQLException ex){
             ex.printStackTrace();
         }

@@ -41,7 +41,7 @@ public interface TradingPlatformDataSource {
      * @param name the name of the organisation that is having its credits changed
      * @param credits the new value for credits
      */
-    void setCredits(String name, int credits);
+    void setOrganisationCredits(String name, int credits);
 
     /**
      * changes the amount of assets an organisation has

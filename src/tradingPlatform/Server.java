@@ -83,7 +83,77 @@ public class Server {
          * must be thread-safe in some way. The easiest way to achieve thread safety is to just put a giant
          * lock around all database operations, in this case with a synchronized block on the database object.
          */
+        switch (command){
+            case ADD_ORGANISATION:{
+                // User is sending the name of a new organisation
+                final String orgName = (String) inputStream.readObject();
+                synchronized (database){
+                    database.addOrganisation(orgName);
+                }
+                System.out.printf("Added organisation '%s' to database from client %s%n", orgName, socket.toString());
+            }
+            break;
 
+            case GET_ORGANISATION:{
+                // User is sending the name of the organisation they are looking for
+                final String orgName = (String) inputStream.readObject();
+                synchronized (database){
+                    final OrganisationalUnit org = database.getOrganisation(orgName);
+
+                    outputStream.writeObject(org);
+
+                    if(org != null){
+                        System.out.printf("Sent organisation '%s' to client %s%n",
+                                org.getName(), socket.toString());
+                    }
+                }
+                outputStream.flush();
+            }
+            break;
+
+            case DELETE_ORGANISATION:{
+                final String orgName = (String) inputStream.readObject();
+                synchronized (database){
+                    database.deleteOrganisation(orgName);
+                }
+
+                System.out.printf("Deleted organisation '%s' on behalf of client %s%n",
+                        orgName, socket.toString());
+            }
+            break;
+
+            case GET_ORGANISATIONS_LIST:{
+                synchronized (database){
+                    outputStream.writeObject(database.getOrganisationsList());
+                }
+                outputStream.flush();
+
+                System.out.printf("Sent organisation name set to client %s%n", socket.toString());
+            }
+            break;
+
+            case SET_ORGANISATION_CREDITS:{
+                final String orgName = (String) inputStream.readObject();
+                final int creditAmount = (int) inputStream.readObject();
+                synchronized (database){
+                    database.setOrganisationCredits(orgName,creditAmount);
+                }
+                System.out.printf("Updated the credits of %s to %d on behalf of client %s%n",
+                        orgName, creditAmount, socket.toString());
+            }
+            break;
+
+            case SET_ORGANISATION_ASSET_AMOUNT:{
+                final String orgName = (String) inputStream.readObject();
+                final String asset = (String) inputStream.readObject();
+                final int amount = (int) inputStream.readObject();
+                synchronized (database){
+                    database.setOrganisationAssetAmount(orgName,asset,amount);
+                }
+                System.out.printf("Updated the %s of %s to %d on behalf of client %s%n",
+                        asset, orgName, amount, socket.toString());
+            }
+        }
     }
 
     /**

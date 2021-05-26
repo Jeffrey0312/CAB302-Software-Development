@@ -1,10 +1,11 @@
 package tradingPlatform;
 
+import java.io.Serializable;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-public class OrganisationalUnit implements TradingPlatform{
+public class OrganisationalUnit implements Serializable {
 
     private String organisation;
     private int credits;
