@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class NetworkDataSource implements TradingPlatformDataSource{
     private static final String HOSTNAME = "127.0.0.1";
@@ -34,22 +35,33 @@ public class NetworkDataSource implements TradingPlatformDataSource{
     }
 
     @Override
-    public void getOrganisation(String name) {
+    public OrganisationalUnit getOrganisation(String name) {
+        return new OrganisationalUnit();
+    }
+
+    @Override
+    public void addOrganisation(String name) {
 
     }
 
     @Override
-    public void addOrganisation(OrganisationalUnit o) {
+    public void deleteOrganisation(String name) {
 
     }
 
     @Override
-    public void getOrganisation(OrganisationalUnit o) {
+    public Set<String> getOrganisationsList() {
+        //Set<String> orgs = new TreeSet<>();
+        return new TreeSet<>();
+    }
+
+    @Override
+    public void setCredits(String name, int credits) {
 
     }
 
     @Override
-    public void deleteOrganisation(OrganisationalUnit o) {
+    public void setOrganisationAssetAmount(String organisation, String asset, int amount) {
 
     }
 }
