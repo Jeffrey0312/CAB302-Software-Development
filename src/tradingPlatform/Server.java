@@ -59,7 +59,6 @@ public class Server {
                      * any new requests. We don't want to disconnect them otherwise. Another way to
                      * check if they're "still there would be with ping/pong commands.
                      */
-
                 }
             }
         } catch (IOException | ClassCastException | ClassNotFoundException e) {
@@ -86,7 +85,7 @@ public class Server {
         switch (command){
             case ADD_ORGANISATION:{
                 // User is sending the name of a new organisation
-                final String orgName = (String) inputStream.readObject();
+                final OrganisationalUnit orgName = (OrganisationalUnit) inputStream.readObject();
                 synchronized (database){
                     database.addOrganisation(orgName);
                 }
@@ -104,7 +103,7 @@ public class Server {
 
                     if(org != null){
                         System.out.printf("Sent organisation '%s' to client %s%n",
-                                org.getName(), socket.toString());
+                                org.getOrganisation(), socket.toString());
                     }
                 }
                 outputStream.flush();
@@ -153,6 +152,55 @@ public class Server {
                 System.out.printf("Updated the %s of %s to %d on behalf of client %s%n",
                         asset, orgName, amount, socket.toString());
             }
+            break;
+
+            case ADD_USER:{
+                // User is sending the name of a new organisation
+                final User userName = (User) inputStream.readObject();
+                synchronized (database){
+                    database.addUser(userName);
+                }
+                System.out.printf("Added user '%s' to database from client %s%n", userName, socket.toString());
+            }
+            break;
+
+            case GET_USER:{
+                // User is sending the name of the organisation they are looking for
+                final String userName = (String) inputStream.readObject();
+                synchronized (database){
+                    final User user = database.getUser(userName);
+
+                    outputStream.writeObject(user);
+
+                    if(user != null){
+                        System.out.printf("Sent user '%s' to client %s%n",
+                                user.getUsername(), socket.toString());
+                    }
+                }
+                outputStream.flush();
+            }
+            break;
+
+            case DELETE_USER:{
+                final String userName = (String) inputStream.readObject();
+                synchronized (database){
+                    database.deleteUser(userName);
+                }
+
+                System.out.printf("Deleted user '%s' on behalf of client %s%n",
+                        userName, socket.toString());
+            }
+            break;
+
+            case GET_USER_LIST:{
+                synchronized (database){
+                    outputStream.writeObject(database.getUserList());
+                }
+                outputStream.flush();
+
+                System.out.printf("Sent user name set to client %s%n", socket.toString());
+            }
+            break;
         }
     }
 

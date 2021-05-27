@@ -4,8 +4,8 @@ public class ClientUser extends User {
 
     public String Organisation;
 
-    public ClientUser(String userName, String password) {
-        super(userName, password);
+    public ClientUser() {
+
     }
 
     /** Changes the Password

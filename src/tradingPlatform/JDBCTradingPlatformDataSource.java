@@ -23,10 +23,15 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                     + ");";
 
     private static final String INSERT_ORGANISATION = "INSERT INTO organisations (organisation, credits) VALUES (?, ?);";
-    private static final String GET_ORGANISATIONS_List = "SELECT organisation FROM organisations";
+    private static final String GET_ORGANISATIONS_LIST = "SELECT organisation FROM organisations";
     private static final String GET_ORGANISATION = "SELECT * FROM organisations WHERE organisation=?";
     private static final String DELETE_ORGANISATION = "DELETE FROM organisations WHERE organisation=?";
     private static final String UPDATE_ORGANISATION_CREDITS = "UPDATE organisations SET credits = ? WHERE organisation = ?";
+
+    private static final String INSERT_USER = "INSERT INTO users (organisation, credits) VALUES (?, ?);";
+    private static final String GET_USER_LIST = "SELECT user FROM users";
+    private static final String GET_USER = "SELECT * FROM users WHERE user=?";
+    private static final String DELETE_USER = "DELETE FROM users WHERE user=?";
 
     private PreparedStatement addOrganisation;
     private PreparedStatement getOrganisationsList;
@@ -34,6 +39,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private PreparedStatement deleteOrganisation;
     private PreparedStatement setOrganisationCredits;
 
+    private PreparedStatement rowCount;
+    private PreparedStatement addUser;
+    private PreparedStatement getUserList;
+    private PreparedStatement getUser;
+    private PreparedStatement deleteUser;
 
     public static final String CREATE_TABLE_ASSETS =
             "CREATE TABLE IF NOT EXISTS assets ("
@@ -57,6 +67,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private PreparedStatement getOrganisationAssetList;
     private PreparedStatement setOrganisationAssetAmount;
 
+    private Connection connection;
 
     public static final String CREATE_TABLE_USERS =
             "CREATE TABLE IF NOT EXISTS users ("
@@ -107,8 +118,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                     + "ON DELETE CASCADE"
                     + ");";
 
-    private Connection connection;
-
     public JDBCTradingPlatformDataSource() {
         connection = DBConnection.getInstance();
         try {
@@ -120,10 +129,15 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             st.execute(CREATE_TABLE_TRANSACTIONS);
 
             addOrganisation = connection.prepareStatement(INSERT_ORGANISATION);
-            getOrganisationsList = connection.prepareStatement(GET_ORGANISATIONS_List);
+            getOrganisationsList = connection.prepareStatement(GET_ORGANISATIONS_LIST);
             getOrganisation = connection.prepareStatement(GET_ORGANISATION);
             deleteOrganisation = connection.prepareStatement(DELETE_ORGANISATION);
             setOrganisationCredits = connection.prepareStatement(UPDATE_ORGANISATION_CREDITS);
+
+            addUser = connection.prepareStatement(INSERT_USER);
+            getUserList = connection.prepareStatement(GET_USER_LIST);
+            getUser = connection.prepareStatement(GET_USER);
+            deleteUser = connection.prepareStatement(DELETE_USER);
 
             addOrganisationAsset = connection.prepareStatement(INSERT_ORGANISATION_ASSET);
             getAssets = connection.prepareStatement(GET_ASSETS);
@@ -135,7 +149,19 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    public int getSize() {
+        ResultSet rs = null;
+        int rows = 0;
+        try {
+            rs = rowCount.executeQuery();
+            rs.next();
+            rows = rs.getInt(1);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return rows;
+    }
+
     public OrganisationalUnit getOrganisation(String name) {
         OrganisationalUnit org = new OrganisationalUnit();
         ResultSet rsOrg;
@@ -143,7 +169,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try{
             getOrganisation.setString(1, name);
             rsOrg = getOrganisation.executeQuery();
-            org.setName(rsOrg.getString("organisation"));
+            org.setOrganisation(rsOrg.getString("organisation"));
             org.setCredits(Integer.parseInt(rsOrg.getString("credits")));
             getOrganisationAssetList.setString(1,name);
             rsAssets = getOrganisationAssetList.executeQuery();
@@ -159,16 +185,15 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return org;
     }
 
-    @Override
-    public void addOrganisation(String name) {
+    public void addOrganisation(OrganisationalUnit o) {
         ResultSet rs;
         try{
-            addOrganisation.setString(1,name);
+            addOrganisation.setString(1,o.getOrganisation());
             addOrganisation.setString(2,"0");
             addOrganisation.execute();
             rs = getAssets.executeQuery();
             while (rs.next()){
-                addOrganisationAsset.setString(1,name);
+                addOrganisationAsset.setString(1,o.getOrganisation());
                 addOrganisationAsset.setString(2,rs.getString("asset"));
                 addOrganisationAsset.setString(3,"0");
                 addOrganisationAsset.execute();
@@ -179,7 +204,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
     public void deleteOrganisation(String name) {
         try{
             deleteOrganisation.setString(1,name);
@@ -189,7 +213,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
     public Set<String> getOrganisationsList() {
         Set<String> orgs = new TreeSet<>();
         ResultSet rs;
@@ -204,7 +227,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return orgs;
     }
 
-    @Override
     public void setOrganisationCredits(String name, int credits) {
         try{
             setOrganisationCredits.setString(1,name);
@@ -215,7 +237,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
     public void setOrganisationAssetAmount(String organisation, String asset, int amount) {
         try{
             setOrganisationAssetAmount.setString(1,String.valueOf(amount));
@@ -223,6 +244,65 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             setOrganisationAssetAmount.setString(3,asset);
             setOrganisationAssetAmount.execute();
         } catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public User getUser(String name) {
+        User user = new User();
+        ResultSet rsUser;
+        try{
+            getUser.setString(1, name);
+            rsUser = getUser.executeQuery();
+            user.setUsername(rsUser.getString("username"));
+            user.setFirstname(rsUser.getString("firstname"));
+            user.setLastname(rsUser.getString("lastname"));
+            user.setPassword(rsUser.getString("password"));
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return user;
+    }
+
+    public void addUser(User u) {
+        try{
+            addUser.setString(1, u.getUsername());
+            addUser.setString(2, u.getFirstname());
+            addUser.setString(3, u.getLastname());
+            addUser.setString(4, u.getPassword());
+            addUser.execute();
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public void deleteUser(String name) {
+        try{
+            deleteUser.setString(1,name);
+            deleteUser.executeUpdate();
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public Set<String> getUserList() {
+        Set<String> users = new TreeSet<>();
+        ResultSet rs;
+        try{
+            rs = getUserList.executeQuery();
+            while (rs.next()){
+                users.add(rs.getString("user"));
+            }
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return users;
+    }
+
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }

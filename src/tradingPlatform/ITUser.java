@@ -4,7 +4,7 @@ public class ITUser extends User{
 
 
     public ITUser(String userName, String password) {
-        super(userName, password);
+
     }
 
     /** Creates a new organisation
