@@ -28,22 +28,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String DELETE_ORGANISATION = "DELETE FROM organisations WHERE organisation=?";
     private static final String UPDATE_ORGANISATION_CREDITS = "UPDATE organisations SET credits = ? WHERE organisation = ?";
 
-    private static final String INSERT_USER = "INSERT INTO users (organisation, credits) VALUES (?, ?);";
-    private static final String GET_USER_LIST = "SELECT user FROM users";
-    private static final String GET_USER = "SELECT * FROM users WHERE user=?";
-    private static final String DELETE_USER = "DELETE FROM users WHERE user=?";
-
     private PreparedStatement addOrganisation;
     private PreparedStatement getOrganisationsList;
     private PreparedStatement getOrganisation;
     private PreparedStatement deleteOrganisation;
     private PreparedStatement setOrganisationCredits;
-
-    private PreparedStatement rowCount;
-    private PreparedStatement addUser;
-    private PreparedStatement getUserList;
-    private PreparedStatement getUser;
-    private PreparedStatement deleteUser;
 
     public static final String CREATE_TABLE_ASSETS =
             "CREATE TABLE IF NOT EXISTS assets ("
@@ -57,22 +46,24 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                     + "ON DELETE CASCADE"
                     + ");";
 
-    private static final String INSERT_ORGANISATION_ASSET = "INSERT INTO assets (organisation, asset, asset_amount) VALUES (?, ?, ?);";
+    private static final String INSERT_ORGANISATION_ASSET = "INSERT INTO assets (organisation, asset, asset_amount) VALUES (?, ?, ?)";
     private static final String GET_ASSETS = "SELECT DISTINCT asset FROM assets";
     private static final String GET_ORGANISATION_ASSETS = "SELECT asset, asset_amount FROM assets WHERE organisation =?";
     private static final String UPDATE_ORGANISATION_ASSET_AMOUNT = "UPDATE assets SET asset_amount = ? WHERE organisation = ? AND asset = ?";
+    private static final String DELETE_ASSET = "DELETE FROM assets WHERE asset = ?";
 
     private PreparedStatement addOrganisationAsset;
     private PreparedStatement getAssets;
     private PreparedStatement getOrganisationAssetList;
     private PreparedStatement setOrganisationAssetAmount;
-
-    private Connection connection;
+    private PreparedStatement deleteAsset;
 
     public static final String CREATE_TABLE_USERS =
             "CREATE TABLE IF NOT EXISTS users ("
                     + "username VARCHAR(32) NOT NULL,"
                     + "password VARCHAR(32) NOT NULL,"
+                    + "firstname VARCHAR(32) NOT NULL,"
+                    + "lastname VARCHAR(32) NOT NULL,"
                     + "salt INTEGER NOT NULL /*!40101 AUTO_INCREMENT */,"
                     + "organisation VARCHAR(32) DEFAULT NULL,"
                     + "ituser BOOL NOT NULL,"
@@ -82,6 +73,24 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                     + "REFERENCES organisations(organisation)"
                     + "ON DELETE CASCADE"
                     + ");";
+
+    private static final String GET_USER = "SELECT * FROM users WHERE username = ?";
+    private static final String INSERT_USER = "INSERT INTO users (username, password, firstname, lastname, salt, organisation, ituser) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String DELETE_USER = "DELETE FROM users WHERE username = ?";
+    private static final String UPDATE_USER_ORGANISATION = "UPDATE users SET organisation = ? WHERE username = ?";
+    private static final String UPDATE_USER_PASSWORD = "UPDATE users SET password = ? WHERE username = ?";
+    private static final String GET_USERS_LIST = "SELECT username FROM users";
+    private static final String GET_MAX_SALT = "SELECT MAX(salt) FROM users";
+    private static final String USER_ROW_COUNT = "SELECT COUNT(*) FROM users";
+
+    private PreparedStatement getUser;
+    private PreparedStatement addUser;
+    private PreparedStatement deleteUser;
+    private PreparedStatement setUserOrganisation;
+    private PreparedStatement setUserPassword;
+    private PreparedStatement getUsersList;
+    private PreparedStatement getMaxSalt;
+    private PreparedStatement userRowCount;
 
     public static final String CREATE_TABLE_ORDERS =
             "CREATE TABLE IF NOT EXISTS orders ("
@@ -118,6 +127,9 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                     + "ON DELETE CASCADE"
                     + ");";
 
+
+    private Connection connection;
+
     public JDBCTradingPlatformDataSource() {
         connection = DBConnection.getInstance();
         try {
@@ -134,26 +146,31 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             deleteOrganisation = connection.prepareStatement(DELETE_ORGANISATION);
             setOrganisationCredits = connection.prepareStatement(UPDATE_ORGANISATION_CREDITS);
 
-            addUser = connection.prepareStatement(INSERT_USER);
-            getUserList = connection.prepareStatement(GET_USER_LIST);
-            getUser = connection.prepareStatement(GET_USER);
-            deleteUser = connection.prepareStatement(DELETE_USER);
-
             addOrganisationAsset = connection.prepareStatement(INSERT_ORGANISATION_ASSET);
             getAssets = connection.prepareStatement(GET_ASSETS);
             getOrganisationAssetList = connection.prepareStatement(GET_ORGANISATION_ASSETS);
             setOrganisationAssetAmount = connection.prepareStatement(UPDATE_ORGANISATION_ASSET_AMOUNT);
+            deleteAsset = connection.prepareStatement(DELETE_ASSET);
+
+            getUser = connection.prepareStatement(GET_USER);
+            addUser = connection.prepareStatement(INSERT_USER);
+            deleteUser = connection.prepareStatement(DELETE_USER);
+            setUserOrganisation = connection.prepareStatement(UPDATE_USER_ORGANISATION);
+            setUserPassword = connection.prepareStatement(UPDATE_USER_PASSWORD);
+            getUsersList = connection.prepareStatement(GET_USERS_LIST);
+            getMaxSalt = connection.prepareStatement(GET_MAX_SALT);
+            userRowCount = connection.prepareStatement(USER_ROW_COUNT);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    public int getSize() {
+    public int getUserSize() {
         ResultSet rs = null;
         int rows = 0;
         try {
-            rs = rowCount.executeQuery();
+            rs = userRowCount.executeQuery();
             rs.next();
             rows = rs.getInt(1);
         } catch (SQLException ex) {
@@ -162,6 +179,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return rows;
     }
 
+    @Override
     public OrganisationalUnit getOrganisation(String name) {
         OrganisationalUnit org = new OrganisationalUnit();
         ResultSet rsOrg;
@@ -169,14 +187,14 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try{
             getOrganisation.setString(1, name);
             rsOrg = getOrganisation.executeQuery();
-            org.setOrganisation(rsOrg.getString("organisation"));
+            org.setName(rsOrg.getString("organisation"));
             org.setCredits(Integer.parseInt(rsOrg.getString("credits")));
             getOrganisationAssetList.setString(1,name);
             rsAssets = getOrganisationAssetList.executeQuery();
             HashMap<String,Integer> Assets = new HashMap<>();
             while (rsAssets.next()){
                 Assets.put(rsAssets.getString("asset"),
-                           Integer.parseInt(rsAssets.getString("asset_amount")));
+                        Integer.parseInt(rsAssets.getString("asset_amount")));
             }
             org.setAssets(Assets);
         } catch (SQLException ex){
@@ -185,25 +203,26 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return org;
     }
 
-    public void addOrganisation(OrganisationalUnit o) {
+    @Override
+    public void addOrganisation(String name) {
         ResultSet rs;
         try{
-            addOrganisation.setString(1,o.getOrganisation());
+            addOrganisation.setString(1,name);
             addOrganisation.setString(2,"0");
             addOrganisation.execute();
             rs = getAssets.executeQuery();
-            while (rs.next()){
-                addOrganisationAsset.setString(1,o.getOrganisation());
-                addOrganisationAsset.setString(2,rs.getString("asset"));
-                addOrganisationAsset.setString(3,"0");
+            while (rs.next()) {
+                addOrganisationAsset.setString(1, name);
+                addOrganisationAsset.setString(2, rs.getString("asset"));
+                addOrganisationAsset.setString(3, "0");
                 addOrganisationAsset.execute();
             }
-
         } catch(SQLException ex){
             ex.printStackTrace();
         }
     }
 
+    @Override
     public void deleteOrganisation(String name) {
         try{
             deleteOrganisation.setString(1,name);
@@ -213,6 +232,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
+    @Override
     public Set<String> getOrganisationsList() {
         Set<String> orgs = new TreeSet<>();
         ResultSet rs;
@@ -227,6 +247,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return orgs;
     }
 
+    @Override
     public void setOrganisationCredits(String name, int credits) {
         try{
             setOrganisationCredits.setString(1,name);
@@ -237,6 +258,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
+    @Override
     public void setOrganisationAssetAmount(String organisation, String asset, int amount) {
         try{
             setOrganisationAssetAmount.setString(1,String.valueOf(amount));
@@ -244,6 +266,16 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             setOrganisationAssetAmount.setString(3,asset);
             setOrganisationAssetAmount.execute();
         } catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteAsset(String name) {
+        try{
+            deleteAsset.setString(1,name);
+            deleteAsset.execute();
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
@@ -264,39 +296,130 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return user;
     }
 
-    public void addUser(User u) {
+    @Override
+    public void addUser(User user) {
+        ResultSet rs;
+        int salt;
         try{
-            addUser.setString(1, u.getUsername());
-            addUser.setString(2, u.getFirstname());
-            addUser.setString(3, u.getLastname());
-            addUser.setString(4, u.getPassword());
+            if(user instanceof ClientUser){
+                if (((ClientUser) user).getOrganisation().getName() != null){
+                    addUser.setString(6,((ClientUser) user).getOrganisation().getName());
+                } else {
+                    addUser.setString(6,"NULL");
+                }
+                addUser.setString(7,"0");
+            } else if (user instanceof ITUser){
+                addUser.setString(6,"NULL");
+                addUser.setString(7,"1");
+            } else {
+                throw new IllegalArgumentException();
+            }
+            rs = getMaxSalt.executeQuery();
+            salt = Integer.parseInt(rs.getString(1));
+            salt = salt+1;
+            addUser.setString(1,user.getUsername());
+            String password = Hash.SHA512(user.getPassword() + salt);
+            addUser.setString(2, password);
+            addUser.setString(3, user.getFirstname());
+            addUser.setString(4, user.getLastname());
+            addUser.setString(5,String.valueOf(salt));
             addUser.execute();
-        } catch(SQLException ex){
+
+        } catch(Exception ex){
             ex.printStackTrace();
         }
     }
 
-    public void deleteUser(String name) {
+    @Override
+    public void deleteUser(String username) {
         try{
-            deleteUser.setString(1,name);
-            deleteUser.executeUpdate();
+            deleteUser.setString(1,username);
+            deleteUser.execute();
         } catch(SQLException ex){
             ex.printStackTrace();
         }
     }
 
-    public Set<String> getUserList() {
+    @Override
+    public void setUserOrganisation(String username, String organisation) {
+        try{
+            setUserOrganisation.setString(1,organisation);
+            setOrganisationAssetAmount.setString(2,username);
+            setOrganisationAssetAmount.execute();
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setUserPassword(String username, String password) {
+        try{
+            getUser.setString(1,username);
+            ResultSet rs = getUser.executeQuery();
+            password = Hash.SHA512(password + rs.getString("salt"));
+            setUserPassword.setString(1,password);
+            setUserPassword.setString(2,username);
+            setUserPassword.execute();
+        } catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public Set<String> getUsersList() {
         Set<String> users = new TreeSet<>();
         ResultSet rs;
         try{
-            rs = getUserList.executeQuery();
+            rs = getUsersList.executeQuery();
             while (rs.next()){
-                users.add(rs.getString("user"));
+                users.add(rs.getString("username"));
             }
         } catch(SQLException ex){
             ex.printStackTrace();
         }
         return users;
+    }
+
+    @Override
+    public User login(String username, String password) {
+        ResultSet rsUser;
+        try{
+            getUser.setString(1,username);
+            rsUser = getUser.executeQuery();
+            rsUser.next();
+            if(Hash.SHA512(password + rsUser.getString("Salt")).equals(rsUser.getString("password"))){
+                if(rsUser.getString("ituser").equals("1")){
+                    return new ITUser(username, password, rsUser.getString("firstname"),rsUser.getString("lastname"));
+                }else{
+                    OrganisationalUnit org;
+                    if (rsUser.getString("organisation").equals("NULL")){
+                        org = null;
+                    } else{
+                        org = new OrganisationalUnit();
+                        ResultSet rsOrg;
+                        ResultSet rsAssets;
+                        getOrganisation.setString(1, rsUser.getString("organisation"));
+                        rsOrg = getOrganisation.executeQuery();
+                        org.setName(rsOrg.getString("organisation"));
+                        org.setCredits(Integer.parseInt(rsOrg.getString("credits")));
+                        getOrganisationAssetList.setString(1,rsUser.getString("organisation"));
+                        rsAssets = getOrganisationAssetList.executeQuery();
+                        HashMap<String,Integer> Assets = new HashMap<>();
+                        while (rsAssets.next()){
+                            Assets.put(rsAssets.getString("asset"),
+                                    Integer.parseInt(rsAssets.getString("asset_amount")));
+                        }
+                        org.setAssets(Assets);
+                    }
+                    return new ClientUser(username,password, rsUser.getString("firstname"),rsUser.getString("lastname"),org);
+                }
+            }else{
+                return null;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public void close() {

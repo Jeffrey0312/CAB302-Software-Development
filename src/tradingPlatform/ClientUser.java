@@ -2,18 +2,18 @@ package tradingPlatform;
 
 public class ClientUser extends User {
 
-    public String Organisation;
+    private OrganisationalUnit organisation;
 
-    public ClientUser() {
-
+    public ClientUser(String userName, String firstName, String lastName, String password, OrganisationalUnit organisation) {
+        super(userName, firstName, lastName, password);
+        this.organisation = organisation;
     }
 
-    /** Changes the Password
-     * @param newPassword The new password of the user
-     * */
-    public void changePassword(String newPassword){
-
+    /**
+     * returns the ClientUser's OrganisationalUnit
+     * @return returns the OrganisationalUnit of the ClientUser
+     */
+    public OrganisationalUnit getOrganisation() {
+        return organisation;
     }
-
-
 }

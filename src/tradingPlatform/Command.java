@@ -14,5 +14,9 @@ public enum Command {
     GET_USER,
     ADD_USER,
     DELETE_USER,
-    GET_USER_LIST
+    DELETE_ASSET,
+    GET_USERS_LIST,
+    LOGIN,
+    SET_USER_ORGANISATION,
+    SET_USER_PASSWORD
 }

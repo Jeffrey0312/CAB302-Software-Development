@@ -51,16 +51,16 @@ public class NetworkDataSource implements TradingPlatformDataSource{
     }
 
     @Override
-    public void addOrganisation(OrganisationalUnit o) {
-        if (o == null)
-            throw new IllegalArgumentException("Organisation cannot be null");
+    public void addOrganisation(String name) {
+        if (name == null)
+            throw new IllegalArgumentException("Organisation name cannot be null");
 
         try {
             // tell the server to expect a person's details
             outputStream.writeObject(Command.ADD_ORGANISATION);
 
             // send the actual data
-            outputStream.writeObject(o);
+            outputStream.writeObject(name);
             outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,18 +80,68 @@ public class NetworkDataSource implements TradingPlatformDataSource{
 
     @Override
     public Set<String> getOrganisationsList() {
-        //Set<String> orgs = new TreeSet<>();
+        try {
+            outputStream.writeObject(Command.GET_ORGANISATIONS_LIST);
+            outputStream.flush();
+            return (Set<String>) inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return new TreeSet<>();
     }
 
     @Override
     public void setOrganisationCredits(String name, int credits) {
-
+        if (name == null){
+            throw new IllegalArgumentException("The Organisation name cannot be null");
+        }
+        if (credits < 0){
+            throw new IllegalArgumentException("The number of Credits cannot be negative");
+        }
+        try{
+            outputStream.writeObject(Command.SET_ORGANISATION_CREDITS);
+            outputStream.writeObject(name);
+            outputStream.writeObject(credits);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void setOrganisationAssetAmount(String organisation, String asset, int amount) {
+        if (organisation == null){
+            throw new IllegalArgumentException("The Organisation name cannot be null");
+        }
+        if (asset == null){
+            throw new IllegalArgumentException("The Asset name cannot be null");
+        }
+        if (amount < 0){
+            throw new IllegalArgumentException("The amount of an Asset cannot be negative");
+        }
+        try{
+            outputStream.writeObject(Command.SET_ORGANISATION_ASSET_AMOUNT);
+            outputStream.writeObject(organisation);
+            outputStream.writeObject(asset);
+            outputStream.writeObject(amount);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void deleteAsset(String name) {
+        if (name == null){
+            throw new IllegalArgumentException("The Asset name cannot be null");
+        }
+        try{
+            outputStream.writeObject(Command.DELETE_ASSET);
+            outputStream.writeObject(name);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -115,7 +165,15 @@ public class NetworkDataSource implements TradingPlatformDataSource{
     @Override
     public void addUser(User u) {
         if (u == null)
-            throw new IllegalArgumentException("User cannot be null");
+            throw new IllegalArgumentException("The User cannot be null");
+        if (u.getUsername() == null)
+            throw new IllegalArgumentException("The User username cannot be null");
+        if (u.getPassword() == null)
+            throw new IllegalArgumentException("The User password cannot be null");
+        if (u.getFirstname() == null)
+            throw new IllegalArgumentException("The User first cannot be null");
+        if (u.getLastname() == null)
+            throw new IllegalArgumentException("The User lastname cannot be null");
 
         try {
             // tell the server to expect a person's details
@@ -125,6 +183,42 @@ public class NetworkDataSource implements TradingPlatformDataSource{
             outputStream.writeObject(u);
             outputStream.flush();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setUserOrganisation(String username, String organisation) {
+        if (username == null){
+            throw new IllegalArgumentException("The username cannot be null");
+        }
+        if (organisation== null){
+            throw new IllegalArgumentException("The organisation name cannot be null");
+        }
+        try{
+            outputStream.writeObject(Command.SET_USER_ORGANISATION);
+            outputStream.writeObject(username);
+            outputStream.writeObject(organisation);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setUserPassword(String username, String password) {
+        if (username == null){
+            throw new IllegalArgumentException("The username cannot be null");
+        }
+        if (password == null){
+            throw new IllegalArgumentException("The organisation name cannot be null");
+        }
+        try{
+            outputStream.writeObject(Command.SET_USER_PASSWORD);
+            outputStream.writeObject(username);
+            outputStream.writeObject(Hash.SHA512(password));
+            outputStream.flush();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -141,9 +235,9 @@ public class NetworkDataSource implements TradingPlatformDataSource{
     }
 
     @Override
-    public Set<String> getUserList() {
+    public Set<String> getUsersList() {
         try {
-            outputStream.writeObject(Command.GET_USER_LIST);
+            outputStream.writeObject(Command.GET_USERS_LIST);
             outputStream.flush();
             return (Set<String>) inputStream.readObject();
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
@@ -153,7 +247,27 @@ public class NetworkDataSource implements TradingPlatformDataSource{
     }
 
     @Override
-    public int getSize() {
+    public User login(String username, String password) {
+        if (username == null){
+            throw new IllegalArgumentException("The Username cannot be null");
+        }
+        if (password == null){
+            throw new IllegalArgumentException("The password name cannot be null");
+        }
+        try{
+            outputStream.writeObject(Command.LOGIN);
+            outputStream.writeObject(username);
+            outputStream.writeObject(password);
+            outputStream.flush();
+            return (User) inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public int getUserSize() {
         try {
             outputStream.writeObject(Command.GET_SIZE);
             outputStream.flush();

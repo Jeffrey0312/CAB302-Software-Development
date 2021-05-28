@@ -33,14 +33,14 @@ public class OrganisationalUnit implements Serializable {
      * returns the organisations name
      * @return organisation
      */
-    public String getOrganisation(){return this.organisation;
+    public String getName(){return this.organisation;
     }
 
     /**
      * sets the organisations name to the input
      * @param organisation new name of the organisation
      */
-    public void setOrganisation(String organisation){this.organisation = organisation;
+    public void setName(String organisation){this.organisation = organisation;
     }
 
     /**

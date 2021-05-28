@@ -23,7 +23,7 @@ public class TradingPlatformData {
         data = dataSource;
 
         // add the retrieved data to the list model
-        for (String user : data.getUserList()) {
+        for (String user : data.getUsersList()) {
             listModel.addElement(user);
         }
     }
@@ -31,15 +31,15 @@ public class TradingPlatformData {
     /**
      * Adds an OrganisationalUnit to the data list.
      *
-     * @param o A OrganisationalUnit to add to the data list.
+     * @param orgName The name of the organisation to add to the data list.
      */
-    public void addOrganisation(OrganisationalUnit o) {
+    public void addOrganisation(String orgName) {
 
         // check to see if the person is already in the book
         // if not add to the address book and the list model
-        if (!listModel.contains(o.getOrganisation())) {
-            listModel.addElement(o.getOrganisation());
-            data.addOrganisation(o);
+        if (!listModel.contains(orgName)) {
+            listModel.addElement(orgName);
+            data.addOrganisation(orgName);
         }
     }
 
@@ -119,6 +119,6 @@ public class TradingPlatformData {
      * @return the number of names in the Address Book.
      */
     public int getSize() {
-        return data.getSize();
+        return data.getUserSize();
     }
 }

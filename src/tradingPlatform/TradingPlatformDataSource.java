@@ -19,9 +19,9 @@ public interface TradingPlatformDataSource {
     /**
      * adds a new organisation to the database
      *
-     * @param o name of organisation to add
+     * @param name name of organisation to add
      */
-    void addOrganisation(OrganisationalUnit o);
+    void addOrganisation(String name);
 
     /**
      * deletes the organisation with the given name from the database
@@ -53,10 +53,11 @@ public interface TradingPlatformDataSource {
     void setOrganisationAssetAmount(String organisation, String asset, int amount);
 
     /**
-     * Finalizes any resources used by the data source and ensures data is
-     * persisited.
+     * deletes the given asset from the database
+     *
+     * @param name name of the asset to be deleted
      */
-    void close();
+    void deleteAsset(String name);
 
     /**
      * Extracts all info related to the named organisation
@@ -82,14 +83,31 @@ public interface TradingPlatformDataSource {
     /**
      * gets all users
      */
-    Set<String> getUserList();
+    Set<String> getUsersList();
+
+    void setUserOrganisation(String username, String organisation);
+
+    void setUserPassword(String username, String password);
+
+    /**
+     * used to attempt to login to the system
+     *
+     * @param username username of the user attempting to login
+     * @param password password of the user attempting to login
+     * @return returns an instance of the user class with the users info if inputs are correct other wise returns null
+     */
+    User login(String username, String password);
 
     /**
      * Gets the number of user in the user list.
      * @return size of user list.
      */
-    int getSize();
+    int getUserSize();
 
-
+    /**
+     * Finalizes any resources used by the data source and ensures data is
+     * persisted.
+     */
+    void close();
 
 }

@@ -85,7 +85,7 @@ public class Server {
         switch (command){
             case ADD_ORGANISATION:{
                 // User is sending the name of a new organisation
-                final OrganisationalUnit orgName = (OrganisationalUnit) inputStream.readObject();
+                final String orgName = (String) inputStream.readObject();
                 synchronized (database){
                     database.addOrganisation(orgName);
                 }
@@ -103,7 +103,7 @@ public class Server {
 
                     if(org != null){
                         System.out.printf("Sent organisation '%s' to client %s%n",
-                                org.getOrganisation(), socket.toString());
+                                org.getName(), socket.toString());
                     }
                 }
                 outputStream.flush();
@@ -154,6 +154,15 @@ public class Server {
             }
             break;
 
+            case DELETE_ASSET:{
+                final String assetName = (String) inputStream.readObject();
+                synchronized (database){
+                    database.deleteAsset(assetName);
+                }
+                System.out.printf("Deleted Asset '%s' on behalf of client %s%n", assetName, socket.toString());
+            }
+            break;
+
             case ADD_USER:{
                 // User is sending the name of a new organisation
                 final User userName = (User) inputStream.readObject();
@@ -192,13 +201,53 @@ public class Server {
             }
             break;
 
-            case GET_USER_LIST:{
+            case GET_USERS_LIST:{
                 synchronized (database){
-                    outputStream.writeObject(database.getUserList());
+                    outputStream.writeObject(database.getUsersList());
                 }
                 outputStream.flush();
 
                 System.out.printf("Sent user name set to client %s%n", socket.toString());
+            }
+            break;
+
+            case LOGIN:{
+                // User is sending the name of the organisation they are looking for
+                final String username = (String) inputStream.readObject();
+                final String password = (String) inputStream.readObject();
+                synchronized (database){
+                    final User user = database.login(username,password);
+
+                    outputStream.writeObject(user);
+
+                    if(user != null){
+                        System.out.printf("Sent User '%s' to client %s%n",
+                                user.getUsername(), socket.toString());
+                    }
+                }
+                outputStream.flush();
+            }
+            break;
+
+            case SET_USER_ORGANISATION:{
+                final String username = (String) inputStream.readObject();
+                final String orgName = (String) inputStream.readObject();
+                synchronized (database){
+                    database.setUserOrganisation(username,orgName);
+                }
+                System.out.printf("Updated the organisation of '%s' to '%s' on behalf of client %s%n",
+                        username, orgName, socket.toString());
+            }
+            break;
+
+            case SET_USER_PASSWORD:{
+                final String username = (String) inputStream.readObject();
+                final String password = (String) inputStream.readObject();
+                synchronized (database){
+                    database.setUserPassword(username,password);
+                }
+                System.out.printf("Updated the password of '%s' on behalf of client %s%n",
+                        username, socket.toString());
             }
             break;
         }

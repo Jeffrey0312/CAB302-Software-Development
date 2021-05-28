@@ -3,7 +3,8 @@ package tradingPlatform;
 public class ITUser extends User{
 
 
-    public ITUser(String userName, String password) {
+    public ITUser(String userName, String firstname, String lastname, String password) {
+        super(userName,firstname,lastname,password);
 
     }
 

@@ -34,7 +34,7 @@ public class DBConnection {
 
          // get a connection
          instance = DriverManager.getConnection(url + "/" + schema, username,
-               password);
+                 password);
       } catch (SQLException | FileNotFoundException sqle) {
          System.err.println(sqle);
       } catch (IOException ex) {
@@ -44,7 +44,7 @@ public class DBConnection {
 
    /**
     * Provides global access to the singleton instance of the UrlSet.
-    * 
+    *
     * @return a handle to the singleton instance of the UrlSet.
     */
    public static Connection getInstance() {
