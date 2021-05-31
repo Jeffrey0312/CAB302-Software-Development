@@ -3,11 +3,13 @@ package tradingPlatform;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ITGUI extends JFrame implements ActionListener, Runnable {
+public class ITGUI extends JFrame {
 
     public static final int WIDTH = 1000;
     public static final int HEIGHT = 600;
@@ -16,16 +18,46 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
     private JTextField asset, organisation, userName, firstName, lastName, credits, userPassword;
     private JList assetList, organisationList;//, userList;
     private JTable userList;
+    private JCheckBox userITCheck;
     private JMenuBar menuBar;
     private JMenu options;
     private JMenuItem changePassword, close, logout;
-    private JButton userNewButton, userEditButton, userSaveButton, userDeleteButton;
+    private JButton newButton, editButton, userSaveButton, userDeleteButton;
+    private JButton organisationSaveButton, organisationDeleteButton;
+    private JButton assetSaveButton, assetDeleteButton;
     private DefaultTableModel model;
 
     TradingPlatformData data;
 
-    public ITGUI(String title) throws HeadlessException {
+/*    public ITGUI(String title) throws HeadlessException {
         super(title);
+    }*/
+
+    /**
+     * Constructor sets up user interface, adds listeners and displays.
+     *
+     * @param data The underlying data/model class the UI needs.
+     */
+    public ITGUI(TradingPlatformData data) {
+        this.data = data;
+        createGUI();
+        checkListSize();
+
+        // add listeners to interactive components
+        addButtonListeners(new ButtonListener());
+        addNameListListener(new NameListListener());
+        addClosingListener(new ClosingListener());
+        userList.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                int viewRow = userList.getSelectedRow();
+                if (viewRow >= 0) {
+                    int modelRow = userList.convertRowIndexToModel(viewRow);
+                    //Integer topicId = model.getTopicIdAtRow(modelRow);
+                    displayUser(data.getUser(userList.getSelectedRow()));
+                }
+            }
+        });
     }
 
     private void createGUI() {
@@ -46,36 +78,11 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         ITFrame.setJMenuBar(menuBar);
         ITFrame.setVisible(true);
     }
-    @Override
-    public void run() {
-        createGUI();
-    }
-
-    /**
-     * Invoked when an action occurs.
-     *
-     * @param e the event to be processed
-     */
-
-    public void actionPerformed(ActionEvent e) {
-
-
-    }
-
-/*    /**
-     * Checks size of data/model and enables/disables the delete button
-
-    private void checkListSize() {
-        userDeleteButton.setEnabled(data.getSize() != 0);
-    }*/
 
     private void addMenuItems(){
         changePassword = new JMenuItem("Change Password");
         logout = new JMenuItem("Logout");
         close = new JMenuItem("Close");
-        changePassword.addActionListener(this);
-        logout.addActionListener(this);
-        close.addActionListener(this);
     }
 
     private JMenuBar addMenu(){
@@ -141,7 +148,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         firstName = new JTextField(20);
         lastName = new JTextField(20);
         userPassword = new JPasswordField(20);
-        JCheckBox userITCheck = new JCheckBox();
+        userITCheck = new JCheckBox();
         userITCheck.setBackground(Color.decode("#0b2862"));
         JComboBox userOrganisationList = new JComboBox(testList);
 
@@ -192,15 +199,15 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         JPanel userButtonPanel = new JPanel();
         userButtonPanel.setLayout(new BoxLayout(userButtonPanel, BoxLayout.X_AXIS));
         userButtonPanel.setBackground(Color.decode("#0b2862"));
-        userNewButton = new JButton("New");
-        userEditButton = new JButton("Edit");
+        newButton = new JButton("New");
+        editButton = new JButton("Edit");
         userSaveButton = new JButton("Save");
         userSaveButton.setEnabled(false);
         userDeleteButton = new JButton("Delete");
         userButtonPanel.add(Box.createHorizontalStrut(5));
-        userButtonPanel.add(userNewButton);
+        userButtonPanel.add(newButton);
         userButtonPanel.add(Box.createHorizontalStrut(15));
-        userButtonPanel.add(userEditButton);
+        userButtonPanel.add(editButton);
         userButtonPanel.add(Box.createHorizontalStrut(15));
         userButtonPanel.add(userSaveButton);
         userButtonPanel.add(Box.createHorizontalStrut(15));
@@ -220,7 +227,8 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         String userColumn[] = {"ID", "Username", "First Name", "Last Name", "Organisation"};
         model = new DefaultTableModel(userData, userColumn);
         userList = new JTable(model);
-        //userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        //userList = new JList(data.getModel());
+        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane userScroller = new JScrollPane(userList);
         userScroller.setViewportView(userList);
         userScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -302,15 +310,15 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         JPanel organisationButtonPanel = new JPanel();
         organisationButtonPanel.setLayout(new BoxLayout(organisationButtonPanel, BoxLayout.X_AXIS));
         organisationButtonPanel.setBackground(Color.decode("#0b2862"));
-        JButton organisationNewButton = new JButton("New");
-        JButton organisationEditButton = new JButton("Edit");
-        JButton organisationSaveButton = new JButton("Save");
+        newButton = new JButton("New");
+        editButton = new JButton("Edit");
+        organisationSaveButton = new JButton("Save");
         organisationSaveButton.setEnabled(false);
-        JButton organisationDeleteButton = new JButton("Delete");
+        organisationDeleteButton = new JButton("Delete");
         organisationButtonPanel.add(Box.createHorizontalStrut(5));
-        organisationButtonPanel.add(organisationNewButton);
+        organisationButtonPanel.add(newButton);
         organisationButtonPanel.add(Box.createHorizontalStrut(15));
-        organisationButtonPanel.add(organisationEditButton);
+        organisationButtonPanel.add(editButton);
         organisationButtonPanel.add(Box.createHorizontalStrut(15));
         organisationButtonPanel.add(organisationSaveButton);
         organisationButtonPanel.add(Box.createHorizontalStrut(15));
@@ -381,15 +389,15 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         JPanel assetButtonPanel = new JPanel();
         assetButtonPanel.setLayout(new BoxLayout(assetButtonPanel, BoxLayout.X_AXIS));
         assetButtonPanel.setBackground(Color.decode("#0b2862"));
-        JButton assetNewButton = new JButton("New");
-        JButton assetEditButton = new JButton("Edit");
-        JButton assetSaveButton = new JButton("Save");
+        newButton = new JButton("New");
+        editButton = new JButton("Edit");
+        assetSaveButton = new JButton("Save");
         assetSaveButton.setEnabled(false);
-        JButton assetDeleteButton = new JButton("Delete");
+        assetDeleteButton = new JButton("Delete");
         assetButtonPanel.add(Box.createHorizontalStrut(5));
-        assetButtonPanel.add(assetNewButton);
+        assetButtonPanel.add(newButton);
         assetButtonPanel.add(Box.createHorizontalStrut(15));
-        assetButtonPanel.add(assetEditButton);
+        assetButtonPanel.add(editButton);
         assetButtonPanel.add(Box.createHorizontalStrut(15));
         assetButtonPanel.add(assetSaveButton);
         assetButtonPanel.add(Box.createHorizontalStrut(15));
@@ -437,17 +445,28 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
      * Adds a listener to the new, save and delete buttons
      */
     private void addButtonListeners(ActionListener listener) {
-        userNewButton.addActionListener(listener);
+        newButton.addActionListener(listener);
         userSaveButton.addActionListener(listener);
-        userEditButton.addActionListener(listener);
+        editButton.addActionListener(listener);
         userDeleteButton.addActionListener(listener);
+        //organisationNewButton.addActionListener(listener);
+        organisationSaveButton.addActionListener(listener);
+        //organisationEditButton.addActionListener(listener);
+        organisationDeleteButton.addActionListener(listener);
+        //assetNewButton.addActionListener(listener);
+        assetSaveButton.addActionListener(listener);
+        //assetEditButton.addActionListener(listener);
+        assetDeleteButton.addActionListener(listener);
+        changePassword.addActionListener(listener);
+        logout.addActionListener(listener);
+        close.addActionListener(listener);
     }
 
     /**
      * Adds a listener to the name list
      */
-    private void addUserListListener(ListSelectionListener listener) {
-        //userList.addListSelectionListener(listener);
+    private void addNameListListener(ListSelectionListener listener) {
+        organisationList.addListSelectionListener(listener);
     }
 
     /**
@@ -465,13 +484,16 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         firstName.setText("");
         lastName.setText("");
         userPassword.setText("");
+        organisation.setText("");
+        credits.setText("");
+        asset.setText("");
     }
 
     /**
      * Displays the details of a Person in the address fields.
      * @param user The User to display.
      */
-    private void display(User user) {
+    private void displayUser(User user) {
         if (user != null) {
             firstName.setText(user.getFirstname());
             lastName.setText(user.getLastname());
@@ -480,7 +502,23 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         }
     }
 
+    /**
+     * Displays the details of a Person in the address fields.
+     * @param org The User to display.
+     */
+    private void displayOrganisation(OrganisationalUnit org) {
+        if (org != null) {
+            organisation.setText(org.getName());
+            credits.setText(Integer.toString(org.getCredits()));
+        }
+    }
+
+    private void checkListSize() {
+        userDeleteButton.setEnabled(data.getSize() != 0);
+    }
+
     private class ButtonListener implements ActionListener {
+
 
         /**
          * @see ActionListener#actionPerformed(ActionEvent)
@@ -490,14 +528,22 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
             //int size = data.getSize();
 
             JButton source = (JButton) e.getSource();
-            if (source == userNewButton) {
+            if (source == newButton) {
                 newPressed();
             } else if (source == userSaveButton) {
-                savePressed();
+                saveUserPressed();
             } else if (source == userDeleteButton) {
                 deleteUserPressed();
-            } else if (source == userEditButton) {
-
+            } else if (source == editButton) {
+                setFieldsEditable(true);
+            }  else if (source == organisationSaveButton) {
+                saveOrganisationPressed();
+            } else if (source == organisationDeleteButton) {
+                deleteOrganisationPressed();
+            } else if (source == assetSaveButton) {
+                //saveAssetPressed();
+            } else if (source == assetDeleteButton) {
+                //deleteAssetPressed();
             }
         }
 
@@ -509,26 +555,67 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
             clearFields();
             setFieldsEditable(true);
             userSaveButton.setEnabled(true);
+            organisationSaveButton.setEnabled(true);
+            assetSaveButton.setEnabled(true);
         }
 
         /**
+         * When the save button is pressed, check that the name field contains
+         * something. If it does, create a new User object and attempt to add it
+         * to the data model. Change the fields back to not editable and make the
+         * save button inactive.
+         * <p>
+         * Check the list size to see if the delete button should be enabled.
+         */
+        private void saveUserPressed() {
+            if (userName.getText() != null && !userName.getText().equals("")) {
+                if (userITCheck.isSelected()) {
+                    User u = new User(userName.getText(), firstName.getText(), lastName
+                            .getText(), userPassword.getText());
+                    data.addUser(u);
+                } else {
+                    User u = new ClientUser(userName.getText(), firstName.getText(), lastName
+                            .getText(), userPassword.getText(), (OrganisationalUnit) organisationList.getSelectedValue());
+                    data.addUser(u);
+                }
+            }
+            setFieldsEditable(false);
+            userSaveButton.setEnabled(false);
+        }
+
+        /**
+         * When the save button is pressed, check that the name field contains
+         * something. If it does, create a new organisation object and attempt to add it
+         * to the data model. Change the fields back to not editable and make the
+         * save button inactive.
+         * <p>
+         * Check the list size to see if the delete button should be enabled.
+         */
+        private void saveOrganisationPressed() {
+            if (organisation.getText() != null && !organisation.getText().equals("")) {
+                OrganisationalUnit o = new OrganisationalUnit(organisation.getText(), Integer.parseInt(credits.getText()));
+                data.addOrganisation(o);
+            }
+            setFieldsEditable(false);
+            userSaveButton.setEnabled(false);
+        }
+
+/*        *//**
          * When the save button is pressed, check that the name field contains
          * something. If it does, create a new Person object and attempt to add it
          * to the data model. Change the fields back to not editable and make the
          * save button inactive.
          * <p>
          * Check the list size to see if the delete button should be enabled.
-         */
-        private void savePressed() {
-            if (userName.getText() != null && !userName.getText().equals("")) {
-                User u = new User(userName.getText(), firstName.getText(), lastName
-                        .getText(), userPassword.getText());
-                data.addUser(u);
+         *//*
+        private void saveAssetPressed() {
+            if (asset.getText() != null && !asset.getText().equals("")) {
+                OrganisationalUnit o = new asset(asset.getText(), Integer.parseInt(credits.getText()));
+                data.addOrganisation(o);
             }
             setFieldsEditable(false);
             userSaveButton.setEnabled(false);
-            //checkListSize();
-        }
+        }*/
 
         /**
          * When the delete button is pressed remove the selected name from the
@@ -542,30 +629,56 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
          */
         private void deleteUserPressed() {
             int index = userList.getSelectedRow();
+            //int index = userList.getSelectedIndex();
             //data.deleteUser(userList.getSelectedValue());
             clearFields();
-            if (index != -1) {
+            if (index >= 0) {
                 model.removeRow(index);
-                //checkListSize();
+                JOptionPane.showMessageDialog(null, "Row Deleted");
+            } else {
+                JOptionPane.showMessageDialog(null, "Unable To Delete Row");
             }
         }
     }
+
+    /**
+     * When the delete button is pressed remove the selected organisation from the
+     * data model.
+     * <p>
+     * Clear the fields that were displayed and check to see if the delete
+     * button should be displayed.
+     * <p>
+     * The index here handles cases where the first element of the list is
+     * deleted.
+     */
+    private void deleteOrganisationPressed() {
+        int index = organisationList.getSelectedIndex();
+        data.deleteOrganisation(organisationList.getSelectedValue());
+        clearFields();
+        index--;
+        if (index == -1) {
+            if (data.getSize() != 0) {
+                index = 0;
+            }
+        }
+        organisationList.setSelectedIndex(index);
+        checkListSize();
+    }
+
 
     /**
      * Implements a ListSelectionListener for making the UI respond when a
      * different name is selected from the list.
      */
     private class NameListListener implements ListSelectionListener {
-
         /**
          * @see ListSelectionListener#valueChanged(ListSelectionEvent)
          */
         public void valueChanged(ListSelectionEvent e) {
-            int getRow = userList.getSelectedRow();
-/*                if (userList.get() != -1
-                    && !userList.getSelectedValue().equals("")) {
-                display(data.getUser(userList.getSelectedValue()));
-            }*/
+            if (organisationList.getSelectedValue() != null
+                    && !organisationList.getSelectedValue().equals("")) {
+                displayOrganisation(data.getOrganisation(organisationList.getSelectedValue()));
+            }
         }
     }
 

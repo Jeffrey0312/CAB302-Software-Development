@@ -17,6 +17,16 @@ public class OrganisationalUnit implements Serializable {
     public OrganisationalUnit(){
 
     }
+
+    /**
+     * Constructor to set the values of
+     * @param organisation name of the organisation
+     * @param credits amount of credits the organisation has
+     * */
+    public OrganisationalUnit(String organisation, int credits){
+        this.organisation = organisation;
+        this.credits = credits;
+    }
     /**
      * Constructor to set the values of
      * @param organisation name of the organisation

@@ -33,13 +33,13 @@ public class TradingPlatformData {
      *
      * @param orgName The name of the organisation to add to the data list.
      */
-    public void addOrganisation(String orgName) {
+    public void addOrganisation(OrganisationalUnit orgName) {
 
         // check to see if the person is already in the book
         // if not add to the address book and the list model
         if (!listModel.contains(orgName)) {
             listModel.addElement(orgName);
-            data.addOrganisation(orgName);
+            data.addOrganisation(orgName.getName());
         }
     }
 

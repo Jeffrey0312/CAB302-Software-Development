@@ -1,6 +1,5 @@
 package tradingPlatform;
 
-import java.sql.SQLException;
 import java.util.Set;
 
 /**
