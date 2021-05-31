@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class UserGUI extends JFrame implements ActionListener, Runnable {
 
@@ -16,6 +18,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
     private JMenuBar menuBar;
     private JMenuItem changePassword, logout;
     private JTextField resourceType, estimateCredits, salesAmount, credits, resourceAmount;
+    TradingPlatformData data;
 
     public UserGUI(String title) throws HeadlessException {
         super(title);
@@ -348,7 +351,16 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
         return buyButtonField;
     }
 
+    private class ClosingListener extends WindowAdapter {
 
+        /**
+         * @see WindowAdapter#windowClosing(WindowEvent)
+         */
+        public void windowClosing(WindowEvent e) {
+            data.persist();
+            System.exit(0);
+        }
+    }
     /**
      * Invoked when an action occurs.
      *
