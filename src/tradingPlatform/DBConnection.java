@@ -20,7 +20,7 @@ public class DBConnection {
     */
    private DBConnection() {
       Properties props = new Properties();
-      FileInputStream in;
+      FileInputStream in = null;
       try {
          in = new FileInputStream("./db.props");
          props.load(in);

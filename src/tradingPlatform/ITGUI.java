@@ -25,7 +25,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
     TradingPlatformData data;
 
     public ITGUI(String title) throws HeadlessException {
-        super(title);
+        super(String.valueOf(title));
     }
 
     private void createGUI() {
@@ -46,6 +46,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         ITFrame.setJMenuBar(menuBar);
         ITFrame.setVisible(true);
     }
+
     @Override
     public void run() {
         createGUI();
@@ -66,10 +67,10 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
      * Checks size of data/model and enables/disables the delete button
 
     private void checkListSize() {
-        userDeleteButton.setEnabled(data.getSize() != 0);
+        userDeleteButton.setEnabled(data.getUserSize() != 0);
     }*/
 
-    private void addMenuItems(){
+    private void addMenuItems() {
         changePassword = new JMenuItem("Change Password");
         logout = new JMenuItem("Logout");
         close = new JMenuItem("Close");
@@ -78,16 +79,20 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         close.addActionListener(this);
     }
 
-    private JMenuBar addMenu(){
+    private JMenuBar addMenu() {
         menuBar = new JMenuBar();
         options = new JMenu("Options");
-        options.add(changePassword); options.add(logout); options.add(close);
+        options.add(changePassword);
+        options.add(logout);
+        options.add(close);
         menuBar.add(options);
         return menuBar;
     }
 
-    /** USER SECTION */
-    private void userPaneUI(JTabbedPane tabbedPane){
+    /**
+     * USER SECTION
+     */
+    private void userPaneUI(JTabbedPane tabbedPane) {
         Container userPane = new Container();
         tabbedPane.addTab("User", userPane);
         userPane.setBackground(Color.decode("#0b2862"));
@@ -99,7 +104,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         userPane.add(Box.createHorizontalStrut(15));
     }
 
-    private JPanel makeUserAddPanel(){
+    private JPanel makeUserAddPanel() {
         JPanel userAddPanel = new JPanel();
         userAddPanel.setBackground(Color.decode("#0b2862"));
         userAddPanel.setLayout(new BoxLayout(userAddPanel, BoxLayout.Y_AXIS));
@@ -107,11 +112,11 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         userAddPanel.add(makeUserFieldPanel());
         userAddPanel.add(makeUserButtonPanel());
         userAddPanel.add(Box.createVerticalStrut(100));
-        userAddPanel.setMaximumSize(new Dimension(500,300));
+        userAddPanel.setMaximumSize(new Dimension(500, 300));
         return userAddPanel;
     }
 
-    private JPanel makeUserFieldPanel(){
+    private JPanel makeUserFieldPanel() {
         JPanel userFieldPanel = new JPanel();
         GroupLayout layout = new GroupLayout(userFieldPanel);
         userFieldPanel.setLayout(layout);
@@ -123,7 +128,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         // the edge of the container and the container.
         layout.setAutoCreateContainerGaps(true);
 
-        String[] testList = { " ", "Telstra", "Optus", "Belong" };
+        String[] testList = {" ", "Telstra", "Optus", "Belong"};
 
         JLabel userNameFieldLabel = new JLabel("Username: ");
         JLabel firstNameFieldLabel = new JLabel("First Name: ");
@@ -188,7 +193,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         return userFieldPanel;
     }
 
-    private JPanel makeUserButtonPanel(){
+    private JPanel makeUserButtonPanel() {
         JPanel userButtonPanel = new JPanel();
         userButtonPanel.setLayout(new BoxLayout(userButtonPanel, BoxLayout.X_AXIS));
         userButtonPanel.setBackground(Color.decode("#0b2862"));
@@ -231,8 +236,10 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         return userScroller;
     }
 
-    /** ORGANISATION SECTION */
-    private void organisationPaneUI(JTabbedPane tabbedPane){
+    /**
+     * ORGANISATION SECTION
+     */
+    private void organisationPaneUI(JTabbedPane tabbedPane) {
         Container organisationPane = new Container();
         tabbedPane.addTab("Organisation", organisationPane);
         organisationPane.setBackground(Color.decode("#0b2862"));
@@ -244,18 +251,18 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         organisationPane.add(Box.createHorizontalStrut(15));
     }
 
-    private JPanel makeOrganisationAddPanel(){
+    private JPanel makeOrganisationAddPanel() {
         JPanel organisationAddPanel = new JPanel();
         organisationAddPanel.setBackground(Color.decode("#0b2862"));
         organisationAddPanel.setLayout(new BoxLayout(organisationAddPanel, BoxLayout.Y_AXIS));
         organisationAddPanel.add(Box.createVerticalStrut(50));
         organisationAddPanel.add(makeOrganisationFieldPanel());
         organisationAddPanel.add(makeOrganisationButtonPanel());
-        organisationAddPanel.setMaximumSize(new Dimension(350,300));
+        organisationAddPanel.setMaximumSize(new Dimension(350, 300));
         return organisationAddPanel;
     }
 
-    private JPanel makeOrganisationFieldPanel(){
+    private JPanel makeOrganisationFieldPanel() {
         JPanel organisationFieldPanel = new JPanel();
         GroupLayout layout = new GroupLayout(organisationFieldPanel);
         organisationFieldPanel.setLayout(layout);
@@ -298,7 +305,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         return organisationFieldPanel;
     }
 
-    private JPanel makeOrganisationButtonPanel(){
+    private JPanel makeOrganisationButtonPanel() {
         JPanel organisationButtonPanel = new JPanel();
         organisationButtonPanel.setLayout(new BoxLayout(organisationButtonPanel, BoxLayout.X_AXIS));
         organisationButtonPanel.setBackground(Color.decode("#0b2862"));
@@ -336,8 +343,10 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         return organisationScroller;
     }
 
-    /** ASSET SECTION */
-    private void assetPaneUI(JTabbedPane tabbedPane){
+    /**
+     * ASSET SECTION
+     */
+    private void assetPaneUI(JTabbedPane tabbedPane) {
         Container assetPane = new Container();
         assetPane.setBackground(Color.decode("#0b2862"));
         assetPane.setLayout(new BoxLayout(assetPane, BoxLayout.X_AXIS));
@@ -349,7 +358,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         tabbedPane.addTab("Asset", assetPane);
     }
 
-    private JPanel makeAssetAddPanel(){
+    private JPanel makeAssetAddPanel() {
         JPanel assetAddPanel = new JPanel();
         assetAddPanel.setBackground(Color.decode("#0b2862"));
         assetAddPanel.setLayout(new BoxLayout(assetAddPanel, BoxLayout.Y_AXIS));
@@ -357,11 +366,11 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         assetAddPanel.add(makeAssetFieldPanel());
         assetAddPanel.add(makeAssetButtonPanel());
         assetAddPanel.add(Box.createVerticalStrut(100));
-        assetAddPanel.setMaximumSize(new Dimension(500,300));
+        assetAddPanel.setMaximumSize(new Dimension(500, 300));
         return assetAddPanel;
     }
 
-    private JPanel makeAssetFieldPanel(){
+    private JPanel makeAssetFieldPanel() {
         JPanel assetFieldPanel = new JPanel();
         GroupLayout layout = new GroupLayout(assetFieldPanel);
         JLabel assetFieldLabel = new JLabel("Asset: ");
@@ -377,7 +386,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         return assetFieldPanel;
     }
 
-    private JPanel makeAssetButtonPanel(){
+    private JPanel makeAssetButtonPanel() {
         JPanel assetButtonPanel = new JPanel();
         assetButtonPanel.setLayout(new BoxLayout(assetButtonPanel, BoxLayout.X_AXIS));
         assetButtonPanel.setBackground(Color.decode("#0b2862"));
@@ -415,7 +424,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         return assetScroller;
     }
 
-    private void setFieldsEditable(boolean editable){
+    private void setFieldsEditable(boolean editable) {
         asset.setEditable(editable);
         organisation.setEditable(editable);
         credits.setEditable(editable);
@@ -425,7 +434,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         userPassword.setEditable(editable);
     }
 
-    private void addTabbedPane(){
+    private void addTabbedPane() {
         tabbedPane = new JTabbedPane();
         tabbedPane.setBackground(Color.decode("#8a8a8a"));
         userPaneUI(tabbedPane);
@@ -447,7 +456,7 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
      * Adds a listener to the name list
      */
     private void addUserListListener(ListSelectionListener listener) {
-        //userList.addListSelectionListener(listener);
+//        userList.addListSelectionListener(listener);
     }
 
     /**
@@ -467,8 +476,11 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         userPassword.setText("");
     }
 
+
+
     /**
      * Displays the details of a Person in the address fields.
+     *
      * @param user The User to display.
      */
     private void display(User user) {
@@ -485,9 +497,9 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
         /**
          * @see ActionListener#actionPerformed(ActionEvent)
          */
-        @Override
+
         public void actionPerformed(ActionEvent e) {
-            //int size = data.getSize();
+            int size = data.getUserSize();
 
             JButton source = (JButton) e.getSource();
             if (source == userNewButton) {
@@ -555,19 +567,19 @@ public class ITGUI extends JFrame implements ActionListener, Runnable {
      * Implements a ListSelectionListener for making the UI respond when a
      * different name is selected from the list.
      */
-    private class NameListListener implements ListSelectionListener {
+//    private class NameListListener implements ListSelectionListener {
 
         /**
          * @see ListSelectionListener#valueChanged(ListSelectionEvent)
          */
-        public void valueChanged(ListSelectionEvent e) {
-            int getRow = userList.getSelectedRow();
-/*                if (userList.get() != -1
-                    && !userList.getSelectedValue().equals("")) {
-                display(data.getUser(userList.getSelectedValue()));
-            }*/
-        }
-    }
+//        public void valueChanged(ListSelectionEvent e) {
+////            int getRow = userList.getSelectedRow();
+//                if (userList.getSelectedValue() != null
+//                    && !userList.getSelectedValue().equals("")) {
+//                display(data.getUser(userList.getSelectedValue()));
+//            }
+//        }
+//    }
 
     /**
      * Implements the windowClosing method from WindowAdapter/WindowListener to

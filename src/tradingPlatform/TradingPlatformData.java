@@ -18,9 +18,9 @@ public class TradingPlatformData {
      * application.
      *
      */
-    public TradingPlatformData(TradingPlatformDataSource dataSource) {
+    public TradingPlatformData() {
         listModel = new DefaultListModel();
-        data = dataSource;
+        data = new JDBCTradingPlatformDataSource();
 
         // add the retrieved data to the list model
         for (String user : data.getUsersList()) {
@@ -33,7 +33,7 @@ public class TradingPlatformData {
      *
      * @param orgName The name of the organisation to add to the data list.
      */
-    public void addOrganisation(String orgName) {
+    public void add(String orgName) {
 
         // check to see if the person is already in the book
         // if not add to the address book and the list model
@@ -48,7 +48,7 @@ public class TradingPlatformData {
      *
      * @param key
      */
-    public void deleteOrganisation(Object key) {
+    public void remove(Object key) {
         // remove from both list and map
         listModel.removeElement(key);
         data.deleteOrganisation((String) key);
@@ -118,7 +118,7 @@ public class TradingPlatformData {
     /**
      * @return the number of names in the Address Book.
      */
-    public int getSize() {
+    public int getUserSize() {
         return data.getUserSize();
     }
 }

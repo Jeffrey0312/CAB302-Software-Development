@@ -179,7 +179,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return rows;
     }
 
-    @Override
+    /**
+     * @param name name of the organisation
+     * @return
+     */
+
     public OrganisationalUnit getOrganisation(String name) {
         OrganisationalUnit org = new OrganisationalUnit();
         ResultSet rsOrg;
@@ -203,7 +207,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return org;
     }
 
-    @Override
+    /**
+     * @param name name of organisation to add
+     */
+
     public void addOrganisation(String name) {
         ResultSet rs;
         try{
@@ -222,7 +229,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    /**
+     * @param name name of the organisation to delete
+     */
+
     public void deleteOrganisation(String name) {
         try{
             deleteOrganisation.setString(1,name);
@@ -232,7 +242,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    /**
+     * @return
+     */
+
     public Set<String> getOrganisationsList() {
         Set<String> orgs = new TreeSet<>();
         ResultSet rs;
@@ -247,7 +260,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return orgs;
     }
 
-    @Override
+    /**
+     * @param name    the name of the organisation that is having its credits changed
+     * @param credits the new value for credits
+     */
+
     public void setOrganisationCredits(String name, int credits) {
         try{
             setOrganisationCredits.setString(1,name);
@@ -258,7 +275,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    /**
+     * @param organisation name of the organisation that the change will happen to
+     * @param asset        name of the asset the change will happen to
+     * @param amount       the new amount that the amount of assets will be changed to
+     */
+
     public void setOrganisationAssetAmount(String organisation, String asset, int amount) {
         try{
             setOrganisationAssetAmount.setString(1,String.valueOf(amount));
@@ -270,7 +292,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    /**
+     * @param name name of the asset to be deleted
+     */
+
     public void deleteAsset(String name) {
         try{
             deleteAsset.setString(1,name);
@@ -280,6 +305,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * @param name name of the organisation
+     * @return
+     */
     public User getUser(String name) {
         User user = new User();
         ResultSet rsUser;
@@ -296,7 +325,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return user;
     }
 
-    @Override
+    /**
+     * @param user
+     */
+
     public void addUser(User user) {
         ResultSet rs;
         int salt;
@@ -330,7 +362,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    /**
+     * @param username
+     */
+
     public void deleteUser(String username) {
         try{
             deleteUser.setString(1,username);
@@ -340,7 +375,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    /**
+     * @param username
+     * @param organisation
+     */
+
     public void setUserOrganisation(String username, String organisation) {
         try{
             setUserOrganisation.setString(1,organisation);
@@ -351,7 +390,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    /**
+     * @param username
+     * @param password
+     */
+
     public void setUserPassword(String username, String password) {
         try{
             getUser.setString(1,username);
@@ -365,7 +408,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
-    @Override
+    /**
+     * @return
+     */
+
     public Set<String> getUsersList() {
         Set<String> users = new TreeSet<>();
         ResultSet rs;
@@ -380,7 +426,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         return users;
     }
 
-    @Override
+    /**
+     * @param username username of the user attempting to login
+     * @param password password of the user attempting to login
+     * @return
+     */
+
     public User login(String username, String password) {
         ResultSet rsUser;
         try{
@@ -422,6 +473,9 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     *
+     */
     public void close() {
         try {
             connection.close();
