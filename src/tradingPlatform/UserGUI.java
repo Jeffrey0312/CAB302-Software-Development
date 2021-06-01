@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UserGUI extends JFrame implements ActionListener, Runnable {
+public class UserGUI extends JFrame implements ActionListener {
 
     public static final int Width = 1000;
     public static final int Height = 600;
@@ -17,8 +17,16 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
     private JMenuItem changePassword, logout;
     private JTextField resourceType, estimateCredits, salesAmount, credits, resourceAmount;
 
-    public UserGUI(String title) throws HeadlessException {
+    TradingPlatformData data;
+
+/*    public UserGUI(String title) throws HeadlessException {
         super(title);
+    }*/
+
+    public UserGUI(TradingPlatformData data) {
+        this.data = data;
+        createGUI();
+
     }
 
     private void createGUI() {
@@ -63,7 +71,6 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
         OfferPane(tabbedPane);
         SellPane(tabbedPane);
         BuyPane(tabbedPane);
-
     }
 
     // start of the resource page
@@ -360,7 +367,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
 
     }
 
-    /**
+/*    *//**
      * When an object implementing interface {@code Runnable} is used
      * to create a thread, starting the thread causes the object's
      * {@code run} method to be called in that separately executing
@@ -370,9 +377,9 @@ public class UserGUI extends JFrame implements ActionListener, Runnable {
      * take any action whatsoever.
      *
      * @see Thread#run()
-     */
+     *//*
     @Override
     public void run() {
         createGUI();
-    }
+    }*/
 }

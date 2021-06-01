@@ -8,7 +8,10 @@ import javax.swing.ListModel;
  */
 public class TradingPlatformData {
 
-    DefaultListModel listModel;
+    DefaultListModel userListModel;
+    DefaultListModel organisationListModel;
+    DefaultListModel orderListModel;
+    DefaultListModel transactionListModel;
 
     TradingPlatformDataSource data;
 
@@ -19,12 +22,18 @@ public class TradingPlatformData {
      *
      */
     public TradingPlatformData(TradingPlatformDataSource dataSource) {
-        listModel = new DefaultListModel();
+        userListModel = new DefaultListModel();
+        organisationListModel = new DefaultListModel();
+        orderListModel = new DefaultListModel();
+        transactionListModel = new DefaultListModel();
         data = dataSource;
 
         // add the retrieved data to the list model
         for (String user : data.getUsersList()) {
-            listModel.addElement(user);
+            userListModel.addElement(user);
+        }
+        for (String organisation : data.getOrganisationsList()) {
+            organisationListModel.addElement(organisation);
         }
     }
 
@@ -35,12 +44,16 @@ public class TradingPlatformData {
      */
     public void addOrganisation(OrganisationalUnit orgName) {
 
-        // check to see if the person is already in the book
-        // if not add to the address book and the list model
-        if (!listModel.contains(orgName)) {
-            listModel.addElement(orgName);
+        // check to see if the organisation is already in the book
+        // if not add to the organisation list and the list model
+        if (!organisationListModel.contains(orgName)) {
+            organisationListModel.addElement(orgName);
             data.addOrganisation(orgName.getName());
         }
+    }
+
+    public void setOrganisationCredits(OrganisationalUnit orgName, int credits) {
+        data.setOrganisationCredits(orgName.getName(), credits);
     }
 
     /**
@@ -50,7 +63,7 @@ public class TradingPlatformData {
      */
     public void deleteOrganisation(Object key) {
         // remove from both list and map
-        listModel.removeElement(key);
+        organisationListModel.removeElement(key);
         data.deleteOrganisation((String) key);
     }
 
@@ -61,8 +74,8 @@ public class TradingPlatformData {
     public void addUser(User u) {
         // check to see if the person is already in the book
         // if not add to the address book and the list model
-        if (!listModel.contains(u.getUsername())) {
-            listModel.addElement(u.getUsername());
+        if (!userListModel.contains(u.getUsername())) {
+            userListModel.addElement(u.getUsername());
             data.addUser(u);
         }
     }
@@ -74,7 +87,7 @@ public class TradingPlatformData {
      */
     public void deleteUser(Object key) {
         // remove from both list and map
-        listModel.removeElement(key);
+        userListModel.removeElement(key);
         data.deleteUser((String) key);
     }
 
@@ -108,11 +121,18 @@ public class TradingPlatformData {
 
     /**
      * Accessor for the list model.
-     *
      * @return the listModel to display.
      */
-    public ListModel getModel() {
-        return listModel;
+    public ListModel getUserModel() {
+        return userListModel;
+    }
+
+    /**
+     * Accessor for the list model.
+     * @return the listModel to display.
+     */
+    public ListModel getOrganisationModel() {
+        return userListModel;
     }
 
     /**

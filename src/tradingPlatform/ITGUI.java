@@ -16,16 +16,17 @@ public class ITGUI extends JFrame {
 
     private JTabbedPane tabbedPane;
     private JTextField asset, organisation, userName, firstName, lastName, credits, userPassword;
-    private JList assetList, organisationList;//, userList;
-    private JTable userList;
+    private JList assetList, organisationList, userList;
+    //private JTable userList;
     private JCheckBox userITCheck;
     private JMenuBar menuBar;
     private JMenu options;
     private JMenuItem changePassword, close, logout;
-    private JButton newButton, editButton, userSaveButton, userDeleteButton;
-    private JButton organisationSaveButton, organisationDeleteButton;
-    private JButton assetSaveButton, assetDeleteButton;
+    private JButton userNewButton, userEditButton, userSaveButton, userDeleteButton;
+    private JButton organisationNewButton, organisationEditButton, organisationSaveButton, organisationDeleteButton;
+    private JButton assetNewButton, assetEditButton, assetSaveButton, assetDeleteButton;
     private DefaultTableModel model;
+    private DefaultListModel<String> orgListModelTopic;
 
     TradingPlatformData data;
 
@@ -41,13 +42,13 @@ public class ITGUI extends JFrame {
     public ITGUI(TradingPlatformData data) {
         this.data = data;
         createGUI();
-        checkListSize();
+        //checkListSize();
 
         // add listeners to interactive components
         addButtonListeners(new ButtonListener());
         addNameListListener(new NameListListener());
         addClosingListener(new ClosingListener());
-        userList.getModel().addTableModelListener(new TableModelListener() {
+/*        userList.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
                 int viewRow = userList.getSelectedRow();
@@ -57,7 +58,8 @@ public class ITGUI extends JFrame {
                     displayUser(data.getUser(userList.getSelectedRow()));
                 }
             }
-        });
+        });*/
+        //setVisible(true);
     }
 
     private void createGUI() {
@@ -66,7 +68,6 @@ public class ITGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ITFrame.setLayout(new BorderLayout());
         ITFrame.setResizable(false);
-        //Panel related code will go here
         //ITFrame.getContentPane().setBackground(Color.decode("#0b2862"));
 
         addTabbedPane();
@@ -122,6 +123,7 @@ public class ITGUI extends JFrame {
         JPanel userFieldPanel = new JPanel();
         GroupLayout layout = new GroupLayout(userFieldPanel);
         userFieldPanel.setLayout(layout);
+        orgListModelTopic = new DefaultListModel<>();
 
         // Turn on automatically adding gaps between components
         layout.setAutoCreateGaps(true);
@@ -130,7 +132,8 @@ public class ITGUI extends JFrame {
         // the edge of the container and the container.
         layout.setAutoCreateContainerGaps(true);
 
-        String[] testList = { " ", "Telstra", "Optus", "Belong" };
+        //String[] orgList = { " ", "Telstra", "Optus", "Belong" };
+        String[] orgList = new String[orgListModelTopic.getSize()];
 
         JLabel userNameFieldLabel = new JLabel("Username: ");
         JLabel firstNameFieldLabel = new JLabel("First Name: ");
@@ -150,7 +153,7 @@ public class ITGUI extends JFrame {
         userPassword = new JPasswordField(20);
         userITCheck = new JCheckBox();
         userITCheck.setBackground(Color.decode("#0b2862"));
-        JComboBox userOrganisationList = new JComboBox(testList);
+        JComboBox userOrganisationList = new JComboBox(orgList);
 
         GroupLayout.SequentialGroup hUserGroup = layout.createSequentialGroup();
         hUserGroup.addGroup(layout.createParallelGroup()
@@ -199,15 +202,15 @@ public class ITGUI extends JFrame {
         JPanel userButtonPanel = new JPanel();
         userButtonPanel.setLayout(new BoxLayout(userButtonPanel, BoxLayout.X_AXIS));
         userButtonPanel.setBackground(Color.decode("#0b2862"));
-        newButton = new JButton("New");
-        editButton = new JButton("Edit");
+        userNewButton = new JButton("New");
+        userEditButton = new JButton("Edit");
         userSaveButton = new JButton("Save");
         userSaveButton.setEnabled(false);
         userDeleteButton = new JButton("Delete");
         userButtonPanel.add(Box.createHorizontalStrut(5));
-        userButtonPanel.add(newButton);
+        userButtonPanel.add(userNewButton);
         userButtonPanel.add(Box.createHorizontalStrut(15));
-        userButtonPanel.add(editButton);
+        userButtonPanel.add(userEditButton);
         userButtonPanel.add(Box.createHorizontalStrut(15));
         userButtonPanel.add(userSaveButton);
         userButtonPanel.add(Box.createHorizontalStrut(15));
@@ -220,15 +223,15 @@ public class ITGUI extends JFrame {
     }
 
     private JScrollPane makeUserListPane() {
-        String userData[][] = {
+/*        String userData[][] = {
                 {"101", "AB123", "Amit", "Baheer", "Optus"},
                 {"102", "Jai25", "Jai", "Briggs", "Telstra"},
-                {"101", "SFoster91", "Sachin", "Foster", "Belong"}};
-        String userColumn[] = {"ID", "Username", "First Name", "Last Name", "Organisation"};
-        model = new DefaultTableModel(userData, userColumn);
-        userList = new JTable(model);
-        //userList = new JList(data.getModel());
-        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                {"101", "SFoster91", "Sachin", "Foster", "Belong"}};*/
+        //String userColumn[] = {"ID", "Username", "First Name", "Last Name", "Organisation"};
+        //model = new DefaultTableModel(userData, userColumn);
+        //userList = new JTable(model);
+        userList = new JList(data.getUserModel());
+        //userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane userScroller = new JScrollPane(userList);
         userScroller.setViewportView(userList);
         userScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -310,15 +313,15 @@ public class ITGUI extends JFrame {
         JPanel organisationButtonPanel = new JPanel();
         organisationButtonPanel.setLayout(new BoxLayout(organisationButtonPanel, BoxLayout.X_AXIS));
         organisationButtonPanel.setBackground(Color.decode("#0b2862"));
-        newButton = new JButton("New");
-        editButton = new JButton("Edit");
+        organisationNewButton = new JButton("New");
+        organisationEditButton = new JButton("Edit");
         organisationSaveButton = new JButton("Save");
         organisationSaveButton.setEnabled(false);
         organisationDeleteButton = new JButton("Delete");
         organisationButtonPanel.add(Box.createHorizontalStrut(5));
-        organisationButtonPanel.add(newButton);
+        organisationButtonPanel.add(organisationNewButton);
         organisationButtonPanel.add(Box.createHorizontalStrut(15));
-        organisationButtonPanel.add(editButton);
+        organisationButtonPanel.add(organisationEditButton);
         organisationButtonPanel.add(Box.createHorizontalStrut(15));
         organisationButtonPanel.add(organisationSaveButton);
         organisationButtonPanel.add(Box.createHorizontalStrut(15));
@@ -331,8 +334,8 @@ public class ITGUI extends JFrame {
     }
 
     private JScrollPane makeOrganisationListPane() {
-        String[] organisationDataList = {"Telstra", "Optus", "Belong"};
-        organisationList = new JList(organisationDataList);
+        //String[] organisationDataList = {"Telstra", "Optus", "Belong"};
+        organisationList = new JList(data.getOrganisationModel());
         organisationList.setFixedCellWidth(200);
         JScrollPane organisationScroller = new JScrollPane(organisationList);
         organisationScroller.setViewportView(organisationList);
@@ -389,15 +392,15 @@ public class ITGUI extends JFrame {
         JPanel assetButtonPanel = new JPanel();
         assetButtonPanel.setLayout(new BoxLayout(assetButtonPanel, BoxLayout.X_AXIS));
         assetButtonPanel.setBackground(Color.decode("#0b2862"));
-        newButton = new JButton("New");
-        editButton = new JButton("Edit");
+        assetNewButton = new JButton("New");
+        assetEditButton = new JButton("Edit");
         assetSaveButton = new JButton("Save");
         assetSaveButton.setEnabled(false);
         assetDeleteButton = new JButton("Delete");
         assetButtonPanel.add(Box.createHorizontalStrut(5));
-        assetButtonPanel.add(newButton);
+        assetButtonPanel.add(assetNewButton);
         assetButtonPanel.add(Box.createHorizontalStrut(15));
-        assetButtonPanel.add(editButton);
+        assetButtonPanel.add(assetEditButton);
         assetButtonPanel.add(Box.createHorizontalStrut(15));
         assetButtonPanel.add(assetSaveButton);
         assetButtonPanel.add(Box.createHorizontalStrut(15));
@@ -410,8 +413,8 @@ public class ITGUI extends JFrame {
     }
 
     private JScrollPane makeAssetListPane() {
-        String[] assetDataList = {"CPU Hours", "Widgets", "AutoCAD Licence"};
-        assetList = new JList(assetDataList);
+        //String[] assetDataList = {"CPU Hours", "Widgets", "AutoCAD Licence"};
+        assetList = new JList(data.getOrganisationModel());
         assetList.setFixedCellWidth(200);
         JScrollPane assetScroller = new JScrollPane(assetList);
         assetScroller.setViewportView(assetList);
@@ -445,17 +448,17 @@ public class ITGUI extends JFrame {
      * Adds a listener to the new, save and delete buttons
      */
     private void addButtonListeners(ActionListener listener) {
-        newButton.addActionListener(listener);
+        userNewButton.addActionListener(listener);
         userSaveButton.addActionListener(listener);
-        editButton.addActionListener(listener);
+        userEditButton.addActionListener(listener);
         userDeleteButton.addActionListener(listener);
-        //organisationNewButton.addActionListener(listener);
+        organisationNewButton.addActionListener(listener);
         organisationSaveButton.addActionListener(listener);
-        //organisationEditButton.addActionListener(listener);
+        organisationEditButton.addActionListener(listener);
         organisationDeleteButton.addActionListener(listener);
-        //assetNewButton.addActionListener(listener);
+        assetNewButton.addActionListener(listener);
         assetSaveButton.addActionListener(listener);
-        //assetEditButton.addActionListener(listener);
+        assetEditButton.addActionListener(listener);
         assetDeleteButton.addActionListener(listener);
         changePassword.addActionListener(listener);
         logout.addActionListener(listener);
@@ -467,6 +470,7 @@ public class ITGUI extends JFrame {
      */
     private void addNameListListener(ListSelectionListener listener) {
         organisationList.addListSelectionListener(listener);
+        userList.addListSelectionListener(listener);
     }
 
     /**
@@ -495,9 +499,9 @@ public class ITGUI extends JFrame {
      */
     private void displayUser(User user) {
         if (user != null) {
+            userName.setText(user.getUsername());
             firstName.setText(user.getFirstname());
             lastName.setText(user.getLastname());
-            userName.setText(user.getUsername());
             userPassword.setText(user.getPassword());
         }
     }
@@ -513,49 +517,89 @@ public class ITGUI extends JFrame {
         }
     }
 
-    private void checkListSize() {
+/*    private void checkListSize() {
         userDeleteButton.setEnabled(data.getSize() != 0);
-    }
+        organisationDeleteButton.setEnabled(data.getSize() != 0);
+        assetDeleteButton.setEnabled(data.getSize() != 0);
+    }*/
 
     private class ButtonListener implements ActionListener {
-
-
         /**
          * @see ActionListener#actionPerformed(ActionEvent)
          */
         @Override
-        public void actionPerformed(ActionEvent e) {
-            //int size = data.getSize();
-
-            JButton source = (JButton) e.getSource();
-            if (source == newButton) {
-                newPressed();
-            } else if (source == userSaveButton) {
+        public void actionPerformed(ActionEvent source) {
+            //JButton source = (JButton) e.getSource();
+            if (source.getSource() == userNewButton) {
+                userNewPressed();
+            } else if (source.getSource() == userSaveButton) {
                 saveUserPressed();
-            } else if (source == userDeleteButton) {
+                clearFields();
+                setFieldsEditable(false);
+                userSaveButton.setEnabled(false);
+            } else if (source.getSource() == userDeleteButton) {
                 deleteUserPressed();
-            } else if (source == editButton) {
+            } else if (source.getSource() == userEditButton) {
                 setFieldsEditable(true);
-            }  else if (source == organisationSaveButton) {
+                userSaveButton.setEnabled(true);
+            } else if (source.getSource() == organisationNewButton) {
+                organisationNewPressed();
+            } else if (source.getSource() == organisationSaveButton) {
                 saveOrganisationPressed();
-            } else if (source == organisationDeleteButton) {
+            } else if (source.getSource() == organisationDeleteButton) {
                 deleteOrganisationPressed();
-            } else if (source == assetSaveButton) {
+            } else if (source.getSource() == organisationEditButton) {
+                setFieldsEditable(true);
+                organisationSaveButton.setEnabled(true);
+            } else if (source.getSource() == assetNewButton) {
+                assetNewPressed();
+            } else if (source.getSource() == assetSaveButton) {
                 //saveAssetPressed();
-            } else if (source == assetDeleteButton) {
+            } else if (source.getSource() == assetDeleteButton) {
                 //deleteAssetPressed();
+            } else if (source.getSource() == assetEditButton) {
+                setFieldsEditable(true);
+                assetSaveButton.setEnabled(true);
+            } else if (source.getSource() == changePassword) {
+
+            } else if (source.getSource() == close) {
+                data.persist();
+                System.exit(0);
+            } else if (source.getSource() == logout) {
+
             }
+
+        //JMenuItem menuSource = (JMenuItem) e.getSource();
+
         }
 
         /**
          * When the new button is pressed, clear the field display, make them
          * editable and enable the save button.
          */
-        private void newPressed() {
+        private void userNewPressed() {
             clearFields();
             setFieldsEditable(true);
             userSaveButton.setEnabled(true);
+        }
+
+        /**
+         * When the new button is pressed, clear the field display, make them
+         * editable and enable the save button.
+         */
+        private void organisationNewPressed() {
+            clearFields();
+            setFieldsEditable(true);
             organisationSaveButton.setEnabled(true);
+        }
+
+        /**
+         * When the new button is pressed, clear the field display, make them
+         * editable and enable the save button.
+         */
+        private void assetNewPressed() {
+            clearFields();
+            setFieldsEditable(true);
             assetSaveButton.setEnabled(true);
         }
 
@@ -581,6 +625,7 @@ public class ITGUI extends JFrame {
             }
             setFieldsEditable(false);
             userSaveButton.setEnabled(false);
+            //checkListSize();
         }
 
         /**
@@ -595,6 +640,7 @@ public class ITGUI extends JFrame {
             if (organisation.getText() != null && !organisation.getText().equals("")) {
                 OrganisationalUnit o = new OrganisationalUnit(organisation.getText(), Integer.parseInt(credits.getText()));
                 data.addOrganisation(o);
+                data.setOrganisationCredits(o, Integer.parseInt(credits.getText()));
             }
             setFieldsEditable(false);
             userSaveButton.setEnabled(false);
@@ -628,16 +674,27 @@ public class ITGUI extends JFrame {
          * deleted.
          */
         private void deleteUserPressed() {
-            int index = userList.getSelectedRow();
-            //int index = userList.getSelectedIndex();
-            //data.deleteUser(userList.getSelectedValue());
+/*            //int index = userList.getSelectedRow();
+            int index = userList.getSelectedIndex();
+            data.deleteUser(userList.getSelectedValue());
             clearFields();
             if (index >= 0) {
                 model.removeRow(index);
                 JOptionPane.showMessageDialog(null, "Row Deleted");
             } else {
                 JOptionPane.showMessageDialog(null, "Unable To Delete Row");
+            }*/
+            int index = userList.getSelectedIndex();
+            data.deleteUser(userList.getSelectedValue());
+            clearFields();
+            index--;
+            if (index == -1) {
+                if (data.getSize() != 0) {
+                    index = 0;
+                }
             }
+            userList.setSelectedIndex(index);
+            //checkListSize();
         }
     }
 
@@ -662,7 +719,7 @@ public class ITGUI extends JFrame {
             }
         }
         organisationList.setSelectedIndex(index);
-        checkListSize();
+        //checkListSize();
     }
 
 
@@ -678,6 +735,10 @@ public class ITGUI extends JFrame {
             if (organisationList.getSelectedValue() != null
                     && !organisationList.getSelectedValue().equals("")) {
                 displayOrganisation(data.getOrganisation(organisationList.getSelectedValue()));
+            }
+            if (userList.getSelectedValue() != null
+                   && !userList.getSelectedValue().equals("")) {
+                displayUser(data.getUser(userList.getSelectedValue()));
             }
         }
     }
