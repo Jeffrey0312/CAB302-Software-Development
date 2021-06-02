@@ -1,11 +1,13 @@
 package tradingPlatform;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
 
-public class UserGUI extends JFrame implements ActionListener, Runnable{
+public class UserGUI extends JFrame{
 
     public static final int Width = 1000;
     public static final int Height = 600;
@@ -17,16 +19,16 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
     private JMenuItem changePassword, logout;
     private JTextField resourceType, estimateCredits, salesAmount, credits, resourceAmount, resourceName, creditPerResource, buyResourceAmount;
     private JList resourceList, buyResourceList, historyList;
-    private JButton newButton, sellButton, deleteButton, buyButton;
+    private JButton editButton, sellButton, removeButton, buyButton, newButton;
     TradingPlatformData data;
 
 /*    public UserGUI(String title) throws HeadlessException {
         super(title);
     }*/
 
-    public UserGUI(String data) {
-//        this.data = data;
-//        createGUI();
+    public UserGUI(TradingPlatformData data) {
+        this.data = data;
+        createGUI();
 
     }
 
@@ -51,8 +53,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
         changePassword = new JMenuItem("Change Password");
         logout = new JMenuItem("Logout");
 
-        changePassword.addActionListener(this);
-        logout.addActionListener(this);
+
 
     }
 
@@ -120,7 +121,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
 //                {"101", "Sachin334", "Sachin", "Eystein", "Design", "$700000"}};
         };
 
-        String column[] = {"ASSETS","ORGANIZATION", "ASSETS AMOUNT","PRICE"};
+        String column[] = {"ASSETS", "ORGANIZATION", "ASSETS AMOUNT", "PRICE"};
         resourceTable = new JTable(data, column);
         JScrollPane scrollPane = new JScrollPane(resourceTable);
 
@@ -143,7 +144,6 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
 //    }
 
 
-
     //start of the offer page
     private void OfferPane(JTabbedPane tabbedPane) {
         Container offer = new Container();
@@ -156,6 +156,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
         offer.add(offerButtonFieldPanel());
 
     }
+
     private JPanel searchFieldPanel_2() {
         JPanel searchField_2 = new JPanel();
         searchField_2.setBackground(Color.decode("#0b2862"));
@@ -173,7 +174,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
     }
 
     private JScrollPane offersScrollPane() {
-        String column_1[] = {"Resources","Order time","Organisation","Price","Total","Remaining"};
+        String column_1[] = {"Resources", "Order time", "Organisation", "Price", "Total", "Remaining"};
         String data_1[][] = {
 //                {"R1", "RAM", "27/04/2021","Happy Planet","$3,000","10,000", "8,000",  "27/04/2021"}
         };
@@ -188,13 +189,14 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
 
         return scrollPane_2;
     }
+
     private JPanel offerButtonFieldPanel() {
         JPanel offerButtonField = new JPanel();
-        JButton buyButton = new JButton("Edit");
-        JButton sellButton = new JButton("Remove");
+        JButton editButton = new JButton("Edit");
+        JButton removeButton = new JButton("Remove");
 
-        offerButtonField.add(buyButton);
-        offerButtonField.add(sellButton);
+        offerButtonField.add(editButton);
+        offerButtonField.add(removeButton);
         offerButtonField.setMaximumSize(new Dimension(700, 50));
         return offerButtonField;
     }
@@ -213,7 +215,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
         sell.add(Box.createHorizontalStrut(20));
     }
 
-    private JPanel titlePanel(){
+    private JPanel titlePanel() {
         JPanel sellTitle = new JPanel();
         sellTitle.setBackground(Color.decode("#0b2862"));
         JLabel L1 = new JLabel("Resource List");
@@ -221,16 +223,15 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
         L1.setForeground(Color.WHITE);
         sellTitle.add(L1);
         sellTitle.setMaximumSize(new Dimension(500, 50));
-        return  sellTitle;
+        return sellTitle;
     }
 
-    private JPanel contentPanel(){
+    private JPanel contentPanel() {
         JPanel content = new JPanel();
         GroupLayout layout = new GroupLayout(content);
         content.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
-
 
 
 //        String[] sourceList = {"", "Hard Disk", "RAM"};
@@ -239,6 +240,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
 //        JLabel salesAmountFieldLabel = new JLabel("Sales Amount: ");
 //        JLabel creditsFieldLabel = new JLabel("Credits per Resource: ");
 //        JLabel estimateCreditsFieldLabel = new JLabel("Estimate Credits Income: ");
+
 
         JLabel resourceNameLabel = new JLabel("Resource Name:");
         JLabel creditPerResourceLabel = new JLabel("Credit per Resource:");
@@ -339,7 +341,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
         buy.add(Box.createHorizontalStrut(20));
     }
 
-    private JPanel BuyTitlePanel(){
+    private JPanel BuyTitlePanel() {
         JPanel buyTitle = new JPanel();
         buyTitle.setBackground(Color.decode("#0b2862"));
         JLabel L1 = new JLabel("Buy Resource");
@@ -347,7 +349,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
         L1.setForeground(Color.WHITE);
         buyTitle.add(L1);
         buyTitle.setMaximumSize(new Dimension(500, 50));
-        return  buyTitle;
+        return buyTitle;
     }
 
     private JPanel buyContentPanel() {
@@ -358,24 +360,25 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
         layout.setAutoCreateContainerGaps(true);
 
 
-        String[] buySourceList = {"", "Hard Disk", "RAM"};
+//        String[] buySourceList = {"", "Hard Disk", "RAM"};
         JLabel resourceNameFieldLabel = new JLabel("Resource Name: ");
         JLabel resourceAmountFieldLabel = new JLabel("Resource Amount: ");
+        resourceName = new JTextField(20);
         resourceAmount = new JTextField(20);
-        JComboBox buyResourceList = new JComboBox(buySourceList);
+//        JComboBox buyResourceList = new JComboBox(buySourceList);
         GroupLayout.SequentialGroup hGroup_1 = layout.createSequentialGroup();
         hGroup_1.addGroup(layout.createParallelGroup()
                 .addComponent(resourceNameFieldLabel)
                 .addComponent(resourceAmountFieldLabel));
         hGroup_1.addGroup(layout.createParallelGroup()
-                .addComponent(resourceAmount)
-                .addComponent(buyResourceList));
+                .addComponent(resourceName)
+                .addComponent(resourceAmount));
         layout.setHorizontalGroup(hGroup_1);
 
         GroupLayout.SequentialGroup vGroup_1 = layout.createSequentialGroup();
         vGroup_1.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(resourceNameFieldLabel)
-                .addComponent(buyResourceList));
+                .addComponent(resourceName));
         vGroup_1.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(resourceAmountFieldLabel)
                 .addComponent(resourceAmount));
@@ -460,15 +463,16 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
 
         layout.setAutoCreateContainerGaps(true);
 
+        String[] buySourceList = {"", "Hard Disk", "RAM"};
         JLabel resourceNameLabel = new JLabel("Resource Name:");
         JLabel creditPerResourceLabel = new JLabel("Credit per Resource:");
         JLabel resourceAmountLabel = new JLabel("Resource Amount:");
 
 
-        resourceName = new JTextField(20);
+        JComboBox buyResourceList = new JComboBox(buySourceList);
         creditPerResource = new JTextField(20);
         resourceAmount = new JTextField(20);
-//        setFieldsEditable(false);
+
 
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
@@ -476,7 +480,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
 
         hGroup.addGroup(layout.createParallelGroup().addComponent(resourceNameLabel)
                 .addComponent(creditPerResourceLabel).addComponent(resourceAmountLabel));
-        hGroup.addGroup(layout.createParallelGroup().addComponent(resourceName)
+        hGroup.addGroup(layout.createParallelGroup().addComponent(buyResourceList)
                 .addComponent(creditPerResource).addComponent(resourceAmount));
         layout.setHorizontalGroup(hGroup);
 
@@ -485,7 +489,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
 
 
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(resourceNameLabel).addComponent(resourceName));
+                .addComponent(resourceNameLabel).addComponent(buyResourceList));
 
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(creditPerResourceLabel).addComponent(creditPerResource));
@@ -605,7 +609,7 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
 
 
     private Container HistoryPane(JTabbedPane tabbedPane) {
-        Container history =  new Container();
+        Container history = new Container();
         tabbedPane.addTab("History", history);
         history.setBackground(Color.decode("#c8ddf2"));
         history.setLayout(new BoxLayout(history, BoxLayout.Y_AXIS));
@@ -614,21 +618,67 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
     }
 
 
+    private void addButtonListener(ActionListener listener) {
+        editButton.addActionListener(listener);
+        removeButton.addActionListener(listener);
+        newButton.addActionListener(listener);
+        sellButton.addActionListener(listener);
+        buyButton.addActionListener(listener);
+        changePassword.addActionListener(listener);
+        logout.addActionListener(listener);
+    }
 
+    /**
+     * Adds a listener to the name list
+     */
+    private void addNameListListener(ListSelectionListener listener) {
+        resourceList.addListSelectionListener(listener);
+    }
 
+    /**
+     * Adds a listener to the JFrame
+     */
+    private void addClosingListener(WindowListener listener) {
+        addWindowListener(listener);
+    }
 
 
     /**
-     * Invoked when an action occurs.
-     *
-     * @param e the event to be processed
+     * Sets the text in the address text fields to the empty string.
      */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-
+    private void clearFields() {
+        creditPerResource.setText("");
+        resourceAmount.setText("");
     }
 
+
+    private void displaySell(Transaction transaction) {
+        resourceName.setText(transaction.getAsset());
+        creditPerResource.setText(String.valueOf(transaction.getValue()));
+        resourceAmount.setText(String.valueOf(transaction.getAssetAmount()));
+    }
+
+
+    private void displayBuy(Transaction transaction) {
+        resourceName.setText(transaction.getAsset());
+        resourceAmount.setText(String.valueOf(transaction.getAssetAmount()));
+    }
+
+
+    private class ButtonListener implements ActionListener {
+
+
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param e the event to be processed
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+
+        }
+    }
     /**
      * When an object implementing interface {@code Runnable} is used
      * to create a thread, starting the thread causes the object's
@@ -642,19 +692,8 @@ public class UserGUI extends JFrame implements ActionListener, Runnable{
      */
 
 
-    /*    *//**
-     * When an object implementing interface {@code Runnable} is used
-     * to create a thread, starting the thread causes the object's
-     * {@code run} method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method {@code run} is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
-    @Override
-    public void run() {
-        createGUI();
-    }
+    /*    */
+
+
+
 }
