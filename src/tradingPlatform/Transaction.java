@@ -8,8 +8,11 @@ public class Transaction {
 
     /**
      * No args constructor.
+     * @param resourceNameText
+     * @param text
+     * @param resourceAmountText
      */
-    public Transaction() {
+    public Transaction(String resourceNameText, String text, String resourceAmountText) {
     }
 
     public Transaction(String asset,Integer assetAmount,Integer value){

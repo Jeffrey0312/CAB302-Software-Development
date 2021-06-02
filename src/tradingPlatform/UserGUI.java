@@ -1,13 +1,14 @@
 package tradingPlatform;
 
+import com.sun.jdi.Value;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
-public class UserGUI extends JFrame{
+public class UserGUI extends JFrame {
 
     public static final int Width = 1000;
     public static final int Height = 600;
@@ -29,6 +30,10 @@ public class UserGUI extends JFrame{
     public UserGUI(TradingPlatformData data) {
         this.data = data;
         createGUI();
+
+        addButtonListener(new UserGUI.ButtonListener());
+        addResourceListListener(new UserGUI.ResourceListListener());
+        addClosingListener(new UserGUI.ClosingListener());
 
     }
 
@@ -52,7 +57,6 @@ public class UserGUI extends JFrame{
     private void addMenuItems() {
         changePassword = new JMenuItem("Change Password");
         logout = new JMenuItem("Logout");
-
 
 
     }
@@ -631,7 +635,7 @@ public class UserGUI extends JFrame{
     /**
      * Adds a listener to the name list
      */
-    private void addNameListListener(ListSelectionListener listener) {
+    private void addResourceListListener(ListSelectionListener listener) {
         resourceList.addListSelectionListener(listener);
     }
 
@@ -664,6 +668,13 @@ public class UserGUI extends JFrame{
         resourceAmount.setText(String.valueOf(transaction.getAssetAmount()));
     }
 
+    private void setFieldsEditable(boolean editable) {
+        resourceName.setEditable(editable);
+        resourceAmount.setEditable(editable);
+        creditPerResource.setEditable(editable);
+
+    }
+
 
     private class ButtonListener implements ActionListener {
 
@@ -675,25 +686,102 @@ public class UserGUI extends JFrame{
          */
         @Override
         public void actionPerformed(ActionEvent e) {
+            int size = data.getSize();
+
+            JButton source = (JButton) e.getSource();
+            if (source == newButton) {
+                newPressed();
+            } else if (source == sellButton) {
+                sellPressed();
+            } else if (source == buyButton) {
+                buyPressed();
+            } else if (source == removeButton) {
+                removePressed();
+            } else if (source == editButton) {
+                editPressed();
+            }
+
+        }
+
+        private void newPressed() {
+            clearFields();
+            setFieldsEditable(true);
+            sellButton.setEnabled(true);
+        }
+
+
+        private void sellPressed() {
+            if (resourceName.getText() != null && !resourceName.getText().equals("") &&
+                    resourceAmount.getText() != null && !resourceAmount.getText().equals("") &&
+                    creditPerResource.getText() != null && !creditPerResource.getText().equals("")) {
+                Transaction transaction = new Transaction(
+                        resourceName.getText(),
+                        resourceAmount.getText(),
+                        creditPerResource.getText());
+                data.addResource;
+            }
+
+        }
+
+
+        private void buyPressed() {
+            if (resourceName.getText() != null && !resourceName.getText().equals("") &&
+                    resourceAmount.getText() != null && !resourceAmount.getText().equals("")) {
+                Transaction transaction = new Transaction(
+                        resourceName.getText(),
+                        resourceAmount.getText(),
+                        creditPerResource.getText());
+                data.addBuy;
+
+            }
 
 
         }
+
+        private void removePressed() {
+            int index = resourceList.getSelectedIndex();
+            data.deleteReource(resourceList.getSelectedValue());
+            clearFields();
+            index--;
+            if (index == -1) {
+                if (data.getSize() != 0) {
+                    index = 0;
+                }
+            }
+            resourceList.setSelectedIndex(index);
+        }
+
+        private void editPressed() {
+            //quite complex
+        }
+
+
+
     }
-    /**
-     * When an object implementing interface {@code Runnable} is used
-     * to create a thread, starting the thread causes the object's
-     * {@code run} method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method {@code run} is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
+
+    private class ResourceListListener implements ListSelectionListener{
+
+        public void valueChanged(ListSelectionEvent e) {
+            if (resourceList.getSelectedValue() != null
+                    && !resourceList.getSelectedValue().equals("")) {
+                displaySell(data.getResource(resourceList.getSelectedValue()),
+                        displayBuy(data.getResource(resourceList.getSelectedValue()));
+            }
+
+        }
+    }
 
 
-    /*    */
+    private class ClosingListener extends WindowAdapter {
 
+        /**
+         * @see WindowAdapter#windowClosing(WindowEvent)
+         */
+        public void windowClosing(WindowEvent e) {
+            data.persist();
+            System.exit(0);
+        }
+    }
 
 
 }
