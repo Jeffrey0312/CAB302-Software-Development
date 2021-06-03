@@ -1,13 +1,14 @@
 package tradingPlatform;
 
+
 public class ITUser extends User{
 
-
+    public ITUser() {
+    }
     public ITUser(String userName, String firstname, String lastname, String password) {
         super(userName,firstname,lastname,password);
 
     }
-
     /** Creates a new organisation
      * @param organisation The organisation that is being added
      * */
