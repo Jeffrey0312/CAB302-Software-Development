@@ -29,11 +29,11 @@ public class TradingPlatformData {
         data = dataSource;
 
         // add the retrieved data to the list model
-        for (String user : data.getUsersList()) {
-            userListModel.addElement(user);
-        }
         for (String organisation : data.getOrganisationsList()) {
             organisationListModel.addElement(organisation);
+        }
+        for (String user : data.getUsersList()) {
+            userListModel.addElement(user);
         }
     }
 

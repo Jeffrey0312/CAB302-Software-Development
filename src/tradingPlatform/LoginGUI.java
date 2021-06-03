@@ -5,13 +5,29 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginGUI extends JFrame implements ActionListener, Runnable {
+public class LoginGUI extends JFrame implements ActionListener {
 
     public static final int LoginWidth = 300;
     public static final int LoginHeight = 300;
 
-    public static void CreateLoginGUI() {
-        JFrame LoginFrame = new JFrame("Login");
+    private JLabel LoginLabel, UsernameLabel, PasswordLabel;
+    private JTextField UsernameField, PasswordField;
+    private JButton LoginButton;
+    private JFrame LoginFrame;
+
+    String staffLogin = "staff", staffPassword = "staff";
+    String clientLogin = "client", clientPassword = "client";
+
+    TradingPlatformData data;
+
+    public LoginGUI(TradingPlatformData data){
+        this.data = data;
+        CreateLoginGUI();
+        LoginButton.addActionListener(this);
+    }
+
+    public void CreateLoginGUI() {
+        LoginFrame = new JFrame("Login");
         LoginFrame.setSize(LoginWidth, LoginHeight);
         LoginFrame.setResizable(false);
         LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,13 +41,13 @@ public class LoginGUI extends JFrame implements ActionListener, Runnable {
 
     }
 
-    private static JPanel LoginPanel() {
+    private JPanel LoginPanel() {
         GridBagLayout Layout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
         JPanel logpnl = new JPanel();
         logpnl.setLayout(Layout);
 
-        JLabel LoginLabel = new JLabel("Login");
+        LoginLabel = new JLabel("Login");
         c.weighty = 0.25;
         c.weightx = 1;
         c.gridx = 0;
@@ -39,30 +55,30 @@ public class LoginGUI extends JFrame implements ActionListener, Runnable {
         c.gridwidth = 2;
         logpnl.add(LoginLabel,c);
 
-        JLabel UsernameLabel = new JLabel("Username");
+        UsernameLabel = new JLabel("Username");
         c.weightx = 0.25;
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
         logpnl.add(UsernameLabel,c);
 
-        JLabel PasswordLabel = new JLabel("Password");
+        PasswordLabel = new JLabel("Password");
         c.gridy = 2;
         logpnl.add(PasswordLabel,c);
 
-        JTextField UsernameField = new JTextField();
+        UsernameField = new JTextField();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 0.75;
         c.gridx = 1;
         c.gridy = 1;
         logpnl.add(UsernameField,c);
 
-        JTextField PasswordField = new JTextField();
+        PasswordField = new JTextField();
         c.gridx = 1;
         c.gridy = 2;
         logpnl.add(PasswordField,c);
 
-        JButton LoginButton = new JButton("Login");
+        LoginButton = new JButton("Login");
         c.gridx = 0;
         c.gridy = 3;
         c.weightx = 1;
@@ -75,11 +91,29 @@ public class LoginGUI extends JFrame implements ActionListener, Runnable {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        Object source = e.getSource();
+        if (source == LoginButton) {
+            if (isEqualToString(UsernameField, staffLogin) && isEqualToString(PasswordField, staffPassword)) {
+                new ITGUI(data);
+                LoginFrame.setVisible(false);
+            } else if (isEqualToString(UsernameField, clientLogin) && isEqualToString(PasswordField, clientPassword)) {
+                new UserGUI(data);
+                LoginFrame.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(this,"Incorrect username and password.",
+                        "", JOptionPane.ERROR_MESSAGE);
+                UsernameField.setText("");
+                PasswordField.setText("");
+            }
+        }
     }
 
-    @Override
-    public void run() {
-        CreateLoginGUI();
+    public boolean isEqualToString(JTextField textField, String compareTo) {
+        String text = textField.getText();
+        if(text.equals(compareTo)) {
+            return true;
+        }
+        return false;
     }
+
 }

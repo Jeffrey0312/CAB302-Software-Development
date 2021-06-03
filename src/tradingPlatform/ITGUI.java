@@ -15,7 +15,7 @@ public class ITGUI extends JFrame {
     public static final int HEIGHT = 600;
 
     private JTabbedPane tabbedPane;
-    private JTextField asset, organisation, userName, firstName, lastName, credits, userPassword;
+    private JTextField asset, organisation, userName, firstName, lastName, credits, userPassword, userOrganisation;
     private JList assetList, organisationList, userList;
     //private JTable userList;
     private JCheckBox userITCheck;
@@ -26,13 +26,10 @@ public class ITGUI extends JFrame {
     private JButton organisationNewButton, organisationEditButton, organisationSaveButton, organisationDeleteButton;
     private JButton assetNewButton, assetEditButton, assetSaveButton, assetDeleteButton;
     private DefaultTableModel model;
-    private DefaultListModel<String> orgListModelTopic;
+    private JFrame ITFrame;
+
 
     TradingPlatformData data;
-
-/*    public ITGUI(String title) throws HeadlessException {
-        super(title);
-    }*/
 
     /**
      * Constructor sets up user interface, adds listeners and displays.
@@ -48,24 +45,12 @@ public class ITGUI extends JFrame {
         addButtonListeners(new ButtonListener());
         addNameListListener(new NameListListener());
         addClosingListener(new ClosingListener());
-/*        userList.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                int viewRow = userList.getSelectedRow();
-                if (viewRow >= 0) {
-                    int modelRow = userList.convertRowIndexToModel(viewRow);
-                    //Integer topicId = model.getTopicIdAtRow(modelRow);
-                    displayUser(data.getUser(userList.getSelectedRow()));
-                }
-            }
-        });*/
-        //setVisible(true);
     }
 
     private void createGUI() {
-        JFrame ITFrame = new JFrame("Electronic Asset Trading Platform");
+        ITFrame = new JFrame("Electronic Asset Trading Platform");
         ITFrame.setSize(WIDTH, HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ITFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ITFrame.setLayout(new BorderLayout());
         ITFrame.setResizable(false);
         //ITFrame.getContentPane().setBackground(Color.decode("#0b2862"));
@@ -123,7 +108,6 @@ public class ITGUI extends JFrame {
         JPanel userFieldPanel = new JPanel();
         GroupLayout layout = new GroupLayout(userFieldPanel);
         userFieldPanel.setLayout(layout);
-        orgListModelTopic = new DefaultListModel<>();
 
         // Turn on automatically adding gaps between components
         layout.setAutoCreateGaps(true);
@@ -132,8 +116,7 @@ public class ITGUI extends JFrame {
         // the edge of the container and the container.
         layout.setAutoCreateContainerGaps(true);
 
-        //String[] orgList = { " ", "Telstra", "Optus", "Belong" };
-        String[] orgList = new String[orgListModelTopic.getSize()];
+        //String[] orgList = new String[orgListModelTopic.getSize()];
 
         JLabel userNameFieldLabel = new JLabel("Username: ");
         JLabel firstNameFieldLabel = new JLabel("First Name: ");
@@ -153,7 +136,7 @@ public class ITGUI extends JFrame {
         userPassword = new JPasswordField(20);
         userITCheck = new JCheckBox();
         userITCheck.setBackground(Color.decode("#0b2862"));
-        JComboBox userOrganisationList = new JComboBox(orgList);
+        userOrganisation =  new JTextField(20);
 
         GroupLayout.SequentialGroup hUserGroup = layout.createSequentialGroup();
         hUserGroup.addGroup(layout.createParallelGroup()
@@ -169,7 +152,7 @@ public class ITGUI extends JFrame {
                 .addComponent(lastName)
                 .addComponent(userPassword)
                 .addComponent(userITCheck)
-                .addComponent(userOrganisationList));
+                .addComponent(userOrganisation));
         layout.setHorizontalGroup(hUserGroup);
 
         GroupLayout.SequentialGroup vUserGroup = layout.createSequentialGroup();
@@ -190,7 +173,7 @@ public class ITGUI extends JFrame {
                 .addComponent(userITCheck));
         vUserGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(userOrganisationLabel)
-                .addComponent(userOrganisationList));
+                .addComponent(userOrganisation));
         layout.setVerticalGroup(vUserGroup);
 
         userFieldPanel.setMaximumSize(new Dimension(350, 75));
@@ -223,14 +206,9 @@ public class ITGUI extends JFrame {
     }
 
     private JScrollPane makeUserListPane() {
-/*        String userData[][] = {
-                {"101", "AB123", "Amit", "Baheer", "Optus"},
-                {"102", "Jai25", "Jai", "Briggs", "Telstra"},
-                {"101", "SFoster91", "Sachin", "Foster", "Belong"}};*/
-        //String userColumn[] = {"ID", "Username", "First Name", "Last Name", "Organisation"};
+        //userList = new JTable(data.userListModel);
         //model = new DefaultTableModel(userData, userColumn);
-        //userList = new JTable(model);
-        userList = new JList(data.getUserModel());
+        userList = new JList(data.userListModel);
         //userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane userScroller = new JScrollPane(userList);
         userScroller.setViewportView(userList);
@@ -335,7 +313,7 @@ public class ITGUI extends JFrame {
 
     private JScrollPane makeOrganisationListPane() {
         //String[] organisationDataList = {"Telstra", "Optus", "Belong"};
-        organisationList = new JList(data.getOrganisationModel());
+        organisationList = new JList(data.organisationListModel);
         organisationList.setFixedCellWidth(200);
         JScrollPane organisationScroller = new JScrollPane(organisationList);
         organisationScroller.setViewportView(organisationList);
@@ -434,6 +412,7 @@ public class ITGUI extends JFrame {
         firstName.setEditable(editable);
         lastName.setEditable(editable);
         userPassword.setEditable(editable);
+        userOrganisation.setEditable(editable);
     }
 
     private void addTabbedPane(){
@@ -491,6 +470,7 @@ public class ITGUI extends JFrame {
         organisation.setText("");
         credits.setText("");
         asset.setText("");
+        userOrganisation.setText("");
     }
 
     /**
@@ -517,60 +497,61 @@ public class ITGUI extends JFrame {
         }
     }
 
-/*    private void checkListSize() {
-        userDeleteButton.setEnabled(data.getSize() != 0);
-        organisationDeleteButton.setEnabled(data.getSize() != 0);
-        assetDeleteButton.setEnabled(data.getSize() != 0);
-    }*/
-
     private class ButtonListener implements ActionListener {
         /**
          * @see ActionListener#actionPerformed(ActionEvent)
          */
         @Override
-        public void actionPerformed(ActionEvent source) {
-            //JButton source = (JButton) e.getSource();
-            if (source.getSource() == userNewButton) {
+        public void actionPerformed(ActionEvent e) {
+            Object source = e.getSource();
+            if (source == userNewButton) {
                 userNewPressed();
-            } else if (source.getSource() == userSaveButton) {
+            } else if (source == userSaveButton) {
                 saveUserPressed();
                 clearFields();
                 setFieldsEditable(false);
                 userSaveButton.setEnabled(false);
-            } else if (source.getSource() == userDeleteButton) {
+            } else if (source == userDeleteButton) {
                 deleteUserPressed();
-            } else if (source.getSource() == userEditButton) {
-                setFieldsEditable(true);
-                userSaveButton.setEnabled(true);
-            } else if (source.getSource() == organisationNewButton) {
+            } else if (source == userEditButton) {
+                clearFields();
+                setFieldsEditable(false);
+                userSaveButton.setEnabled(false);
+            } else if (source == organisationNewButton) {
                 organisationNewPressed();
-            } else if (source.getSource() == organisationSaveButton) {
+            } else if (source == organisationSaveButton) {
                 saveOrganisationPressed();
-            } else if (source.getSource() == organisationDeleteButton) {
+                clearFields();
+                setFieldsEditable(false);
+                userSaveButton.setEnabled(false);
+            } else if (source == organisationDeleteButton) {
                 deleteOrganisationPressed();
-            } else if (source.getSource() == organisationEditButton) {
-                setFieldsEditable(true);
-                organisationSaveButton.setEnabled(true);
-            } else if (source.getSource() == assetNewButton) {
+            } else if (source == organisationEditButton) {
+                clearFields();
+                setFieldsEditable(false);
+                userSaveButton.setEnabled(false);
+            } else if (source == assetNewButton) {
                 assetNewPressed();
-            } else if (source.getSource() == assetSaveButton) {
+            } else if (source == assetSaveButton) {
                 //saveAssetPressed();
-            } else if (source.getSource() == assetDeleteButton) {
+                clearFields();
+                setFieldsEditable(false);
+                userSaveButton.setEnabled(false);
+            } else if (source == assetDeleteButton) {
                 //deleteAssetPressed();
-            } else if (source.getSource() == assetEditButton) {
-                setFieldsEditable(true);
-                assetSaveButton.setEnabled(true);
-            } else if (source.getSource() == changePassword) {
-
-            } else if (source.getSource() == close) {
+            } else if (source == assetEditButton) {
+                clearFields();
+                setFieldsEditable(false);
+                userSaveButton.setEnabled(false);
+            } else if (source == changePassword) {
+               new PasswordGUI(data);
+            } else if (source == close) {
                 data.persist();
                 System.exit(0);
-            } else if (source.getSource() == logout) {
-
+            } else if (source == logout) {
+                new LoginGUI(data);
+                ITFrame.setVisible(false);
             }
-
-        //JMenuItem menuSource = (JMenuItem) e.getSource();
-
         }
 
         /**
@@ -613,19 +594,16 @@ public class ITGUI extends JFrame {
          */
         private void saveUserPressed() {
             if (userName.getText() != null && !userName.getText().equals("")) {
-                if (userITCheck.isSelected()) {
+                //if (userITCheck.isSelected()) {
                     User u = new User(userName.getText(), firstName.getText(), lastName
                             .getText(), userPassword.getText());
                     data.addUser(u);
-                } else {
+/*                } else if (!userITCheck.isSelected()) {
                     User u = new ClientUser(userName.getText(), firstName.getText(), lastName
-                            .getText(), userPassword.getText(), (OrganisationalUnit) organisationList.getSelectedValue());
+                            .getText(), userPassword.getText(), (OrganisationalUnit) userOrganisation.getText());
                     data.addUser(u);
-                }
+                }*/
             }
-            setFieldsEditable(false);
-            userSaveButton.setEnabled(false);
-            //checkListSize();
         }
 
         /**
@@ -653,15 +631,15 @@ public class ITGUI extends JFrame {
          * save button inactive.
          * <p>
          * Check the list size to see if the delete button should be enabled.
-         *//*
+         */
         private void saveAssetPressed() {
             if (asset.getText() != null && !asset.getText().equals("")) {
-                OrganisationalUnit o = new asset(asset.getText(), Integer.parseInt(credits.getText()));
+                OrganisationalUnit o = new OrganisationalUnit(asset.getText(), Integer.parseInt(credits.getText()));
                 data.addOrganisation(o);
             }
             setFieldsEditable(false);
             userSaveButton.setEnabled(false);
-        }*/
+        }
 
         /**
          * When the delete button is pressed remove the selected name from the
@@ -732,13 +710,13 @@ public class ITGUI extends JFrame {
          * @see ListSelectionListener#valueChanged(ListSelectionEvent)
          */
         public void valueChanged(ListSelectionEvent e) {
+            if (userList.getSelectedValue() != null
+                    && !userList.getSelectedValue().equals("")) {
+                displayUser(data.getUser(userList.getSelectedValue()));
+            }
             if (organisationList.getSelectedValue() != null
                     && !organisationList.getSelectedValue().equals("")) {
                 displayOrganisation(data.getOrganisation(organisationList.getSelectedValue()));
-            }
-            if (userList.getSelectedValue() != null
-                   && !userList.getSelectedValue().equals("")) {
-                displayUser(data.getUser(userList.getSelectedValue()));
             }
         }
     }

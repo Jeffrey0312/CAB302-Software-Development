@@ -10,7 +10,6 @@ public class Main {
         //invokeLater(new UserGUI("Electronic Asset Trading Platform"));
         //invokeLater(new LoginGUI());
         //invokeLater(new PasswordGUI());
-        //invokeLater(new ITGUI("Electronic Asset Trading Platform"));
         invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
@@ -20,7 +19,7 @@ public class Main {
 
 
     private static void createAndShowGUI() {
-        new ITGUI(
+        new LoginGUI(
                 new TradingPlatformData(
                         new NetworkDataSource()
                 )

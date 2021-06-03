@@ -5,40 +5,50 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PasswordGUI extends JFrame implements ActionListener, Runnable {
+public class PasswordGUI extends JFrame implements ActionListener {
 
     public static final int WIDTH = 300;
     public static final int HEIGHT = 200;
 
-    private static JButton okayButton, cancelButton;
-    private static JLabel oldPasswordLabel, newPasswordLabel;
-    private static JTextField oldPasswordField, newPasswordField;
+    private JButton okayButton, cancelButton;
+    private JLabel oldPasswordLabel, newPasswordLabel;
+    private JTextField oldPasswordField, newPasswordField;
+    private JFrame passwordFrame;
 
-    public static void CreateLoginGUI() {
-        JFrame loginFrame = new JFrame("Change Password");
-        loginFrame.setSize(WIDTH, HEIGHT);
-        loginFrame.setResizable(false);
-        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loginFrame.setLayout(new BorderLayout());
-        loginFrame.add(makePasswordPanel());
-        loginFrame.setVisible(true);
+    TradingPlatformData data;
+
+    public PasswordGUI(TradingPlatformData data){
+        this.data = data;
+        CreateLoginGUI();
+        okayButton.addActionListener(this);
+        cancelButton.addActionListener(this);
     }
 
-    private static JPanel makePasswordPanel() {
-        JPanel userLoginPanel = new JPanel();
-        userLoginPanel.setLayout(new BoxLayout(userLoginPanel, BoxLayout.Y_AXIS));
-        userLoginPanel.add(Box.createVerticalStrut(20));
-        userLoginPanel.add(passwordPanel());
-        userLoginPanel.add(Box.createVerticalStrut(10));
-        userLoginPanel.add(buttonPanel());
-        userLoginPanel.add(Box.createVerticalStrut(20));
-        return userLoginPanel;
+    public void CreateLoginGUI() {
+        passwordFrame = new JFrame("Change Password");
+        passwordFrame.setSize(WIDTH, HEIGHT);
+        passwordFrame.setResizable(false);
+        passwordFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        passwordFrame.setLayout(new BorderLayout());
+        passwordFrame.add(makePasswordPanel());
+        passwordFrame.setVisible(true);
     }
 
-    private static JPanel passwordPanel() {
-        JPanel logPanel = new JPanel();
-        GroupLayout layout = new GroupLayout(logPanel);
-        logPanel.setLayout(layout);
+    private JPanel makePasswordPanel() {
+        JPanel passwordPanel = new JPanel();
+        passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.Y_AXIS));
+        passwordPanel.add(Box.createVerticalStrut(20));
+        passwordPanel.add(passwordPanel());
+        passwordPanel.add(Box.createVerticalStrut(10));
+        passwordPanel.add(buttonPanel());
+        passwordPanel.add(Box.createVerticalStrut(20));
+        return passwordPanel;
+    }
+
+    private JPanel passwordPanel() {
+        JPanel passwordInfoPanel = new JPanel();
+        GroupLayout layout = new GroupLayout(passwordInfoPanel);
+        passwordInfoPanel.setLayout(layout);
         // Turn on automatically adding gaps between components
         layout.setAutoCreateGaps(true);
         // Turn on automatically creating gaps between components that touch
@@ -67,12 +77,12 @@ public class PasswordGUI extends JFrame implements ActionListener, Runnable {
                 .addComponent(newPasswordField));
         layout.setVerticalGroup(vUserGroup);
 
-        logPanel.setMaximumSize(new Dimension(220,200));
+        passwordInfoPanel.setMaximumSize(new Dimension(300,200));
 
-        return logPanel;
+        return passwordInfoPanel;
     }
 
-    private static JPanel buttonPanel() {
+    private JPanel buttonPanel() {
         JPanel passwordButtonPanel = new JPanel();
         okayButton = new JButton("Okay");
         cancelButton =  new JButton("Cancel");
@@ -84,11 +94,11 @@ public class PasswordGUI extends JFrame implements ActionListener, Runnable {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == okayButton) {
 
-    }
-
-    @Override
-    public void run() {
-        CreateLoginGUI();
+        } else if (source == cancelButton) {
+            passwordFrame.setVisible(false);
+        }
     }
 }

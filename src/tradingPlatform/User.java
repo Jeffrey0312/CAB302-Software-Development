@@ -24,10 +24,10 @@ public class User implements Comparable<User>, Serializable {
      * @param userName
      * @param password
      */
-    public User(String firstName, String lastName, String userName, String password) {
+    public User(String userName, String firstName, String lastName, String password) {
+        this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
         this.password = password;
     }
 

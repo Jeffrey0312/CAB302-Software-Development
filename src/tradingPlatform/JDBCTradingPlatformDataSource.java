@@ -286,6 +286,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try{
             getUser.setString(1, name);
             rsUser = getUser.executeQuery();
+            rsUser.next();
             user.setUsername(rsUser.getString("username"));
             user.setFirstname(rsUser.getString("firstname"));
             user.setLastname(rsUser.getString("lastname"));
@@ -318,10 +319,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             salt = Integer.parseInt(rs.getString(1));
             salt = salt+1;
             addUser.setString(1,user.getUsername());
-            String password = Hash.SHA512(user.getPassword() + salt);
-            addUser.setString(2, password);
             addUser.setString(3, user.getFirstname());
             addUser.setString(4, user.getLastname());
+            String password = Hash.SHA512(user.getPassword() + salt);
+            addUser.setString(2, password);
             addUser.setString(5,String.valueOf(salt));
             addUser.execute();
 
