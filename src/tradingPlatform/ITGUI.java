@@ -116,8 +116,6 @@ public class ITGUI extends JFrame {
         // the edge of the container and the container.
         layout.setAutoCreateContainerGaps(true);
 
-        //String[] orgList = new String[orgListModelTopic.getSize()];
-
         JLabel userNameFieldLabel = new JLabel("Username: ");
         JLabel firstNameFieldLabel = new JLabel("First Name: ");
         JLabel lastNameFieldLabel = new JLabel("Last Name: ");
@@ -391,7 +389,6 @@ public class ITGUI extends JFrame {
     }
 
     private JScrollPane makeAssetListPane() {
-        //String[] assetDataList = {"CPU Hours", "Widgets", "AutoCAD Licence"};
         assetList = new JList(data.getOrganisationModel());
         assetList.setFixedCellWidth(200);
         JScrollPane assetScroller = new JScrollPane(assetList);
@@ -594,15 +591,17 @@ public class ITGUI extends JFrame {
          */
         private void saveUserPressed() {
             if (userName.getText() != null && !userName.getText().equals("")) {
-                //if (userITCheck.isSelected()) {
-                    User u = new User(userName.getText(), firstName.getText(), lastName
+                if (userITCheck.isSelected()) {
+                    User u = new ITUser(userName.getText(), firstName.getText(), lastName
                             .getText(), userPassword.getText());
                     data.addUser(u);
-/*                } else if (!userITCheck.isSelected()) {
+                } else if (!userITCheck.isSelected()) {
+                OrganisationalUnit o = new OrganisationalUnit();
+                o.setName(userOrganisation.getText());
                     User u = new ClientUser(userName.getText(), firstName.getText(), lastName
-                            .getText(), userPassword.getText(), (OrganisationalUnit) userOrganisation.getText());
+                            .getText(), userPassword.getText(), o);
                     data.addUser(u);
-                }*/
+                }
             }
         }
 

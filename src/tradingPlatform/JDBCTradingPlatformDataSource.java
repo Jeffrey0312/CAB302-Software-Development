@@ -316,7 +316,8 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                 throw new IllegalArgumentException();
             }
             rs = getMaxSalt.executeQuery();
-            salt = Integer.parseInt(rs.getString(1));
+            rs.next();
+            salt = rs.getInt(1);
             salt = salt+1;
             addUser.setString(1,user.getUsername());
             addUser.setString(3, user.getFirstname());
