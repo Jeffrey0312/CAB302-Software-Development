@@ -17,6 +17,7 @@ class HashTest {
     }
 
     @Test
-    void SHA512() {
+    void getPasswordSHA512() {
+
     }
 }

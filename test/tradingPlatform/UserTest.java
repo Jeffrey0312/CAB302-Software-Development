@@ -13,20 +13,18 @@ class UserTest {
         user=new User();
     }
     @Test
-    @DisplayName("test")
-    void getFirstname(User user) {
-  assertEquals("test",user.getFirstname());
+    void getFirstname() throws Exception {
+  assertEquals(null,user.getFirstname());
     }
 
     @Test
-    @DisplayName("test")
-    void setFirstname(User userName) {
+    void setFirstname() {
+
     }
 
     @Test
-    @DisplayName("test")
-    void getLastname(User user) {
-        assertEquals("test",user.getLastname());
+    void getLastname() {
+        assertEquals(null,user.getLastname());
     }
 
     @Test
@@ -34,9 +32,8 @@ class UserTest {
     }
 
     @Test
-    @DisplayName("test")
     void getUsername() {
-    assertEquals("test",user.getUsername());
+    assertEquals(null,user.getUsername());
     }
 
     @Test
@@ -45,6 +42,7 @@ class UserTest {
 
     @Test
     void getPassword() {
+        assertEquals(null,user.getPassword());
     }
 
     @Test
@@ -56,10 +54,9 @@ class UserTest {
      */
     @Test
     void compareTo() {
-        user.compareTo(user);
         User aUser = new User();
         User bUser = new User();
-        assertTrue(aUser.getFirstname()!=bUser.getFirstname());
+        assertTrue(aUser.getFirstname() ==bUser.getFirstname());
 
     }
 }

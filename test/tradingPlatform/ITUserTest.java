@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ITUserTest {
-
+private String asset;
     @BeforeEach
     void setUp() {
     }
@@ -38,6 +38,9 @@ class ITUserTest {
 
     @Test
     void addAsset() {
+
+
+
     }
 
     @Test
