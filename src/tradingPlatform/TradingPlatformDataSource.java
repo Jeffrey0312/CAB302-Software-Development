@@ -1,5 +1,6 @@
 package tradingPlatform;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,6 +44,12 @@ public interface TradingPlatformDataSource {
     void setOrganisationCredits(String name, int credits);
 
     /**
+     * adds a new asset to the database
+     * @param asset the new asset being added
+     */
+    void addAsset(String asset);
+
+    /**
      * changes the amount of assets an organisation has
      *
      * @param organisation name of the organisation that the change will happen to
@@ -84,8 +91,18 @@ public interface TradingPlatformDataSource {
      */
     Set<String> getUsersList();
 
+    /**
+     * sets the organisation of the user
+     * @param username the username of the user being changed
+     * @param organisation the new organisation
+     */
     void setUserOrganisation(String username, String organisation);
 
+    /**
+     * sets the password of the user
+     * @param username the username of the user being changed
+     * @param password the new password
+     */
     void setUserPassword(String username, String password);
 
     /**
@@ -97,6 +114,19 @@ public interface TradingPlatformDataSource {
      */
     User login(String username, String password);
 
+    void addOrder(Order order);
+
+    void deleteOrder(int orderId);
+
+    void updateOrderAssetAmount(int orderId, int assetAmount);
+
+    Set<Order> getOrderList();
+
+    void addTransaction(Transaction transaction);
+
+    void deleteTransaction(int transactionId);
+
+    Set<Transaction> getTransactionsList();
     /**
      * Gets the number of user in the user list.
      * @return size of user list.

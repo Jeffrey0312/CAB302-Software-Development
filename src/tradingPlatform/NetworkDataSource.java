@@ -108,6 +108,11 @@ public class NetworkDataSource implements TradingPlatformDataSource{
     }
 
     @Override
+    public void addAsset(String asset) {
+
+    }
+
+    @Override
     public void setOrganisationAssetAmount(String organisation, String asset, int amount) {
         if (organisation == null){
             throw new IllegalArgumentException("The Organisation name cannot be null");
@@ -262,6 +267,41 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    public void addOrder(Order order) {
+
+    }
+
+    @Override
+    public void deleteOrder(int orderId) {
+
+    }
+
+    @Override
+    public void updateOrderAssetAmount(int orderId, int assetAmount) {
+
+    }
+
+    @Override
+    public Set<Order> getOrderList() {
+        return null;
+    }
+
+    @Override
+    public void addTransaction(Transaction transaction) {
+
+    }
+
+    @Override
+    public void deleteTransaction(int transactionId) {
+
+    }
+
+    @Override
+    public Set<Transaction> getTransactionsList() {
         return null;
     }
 

@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
@@ -139,6 +140,15 @@ public class Server {
                 }
                 System.out.printf("Updated the credits of %s to %d on behalf of client %s%n",
                         orgName, creditAmount, socket.toString());
+            }
+            break;
+
+            case ADD_ASSET:{
+                final String asset = (String) inputStream.readObject();
+                synchronized (database){
+                    database.addAsset(asset);
+                }
+                System.out.printf("Added asset '%s' to database from client %s%n", asset, socket.toString());
             }
             break;
 
