@@ -10,7 +10,7 @@ class UserTest {
     private User user;
     @BeforeEach
     void setUp() {
-        user = new User();
+        user = new User("Amy","Lin","AL123","123");
     }
 
     @AfterEach
@@ -19,7 +19,7 @@ class UserTest {
 
     @Test
     void getFirstname() {
-        assertNotNull(user.getFirstname());
+        assertEquals("Amy",user.getFirstname());
     }
 
     @Test
@@ -29,7 +29,7 @@ class UserTest {
 
     @Test
     void getLastname() {
-        assertNotNull(user.getLastname());
+        assertEquals("Lin",user.getLastname());
     }
 
     @Test
@@ -38,7 +38,7 @@ class UserTest {
 
     @Test
     void getUsername() {
-        assertNotNull(user.getUsername());
+        assertEquals("AL123",user.getUsername());
     }
 
     @Test
@@ -47,7 +47,7 @@ class UserTest {
 
     @Test
     void getPassword() {
-        assertNotNull(user.getPassword());
+        assertEquals("123",user.getPassword());
     }
 
     @Test
