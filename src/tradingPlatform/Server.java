@@ -221,6 +221,15 @@ public class Server {
             }
             break;
 
+            case GET_USERS_SIZE:{
+                synchronized (database){
+                    outputStream.writeObject(database.getUserSize());
+                }
+                outputStream.flush();
+
+                System.out.printf("Sent user table size to client %s%n", socket.toString());
+            }
+
             case LOGIN:{
                 // User is sending the name of the organisation they are looking for
                 final String username = (String) inputStream.readObject();
@@ -260,6 +269,64 @@ public class Server {
                         username, socket.toString());
             }
             break;
+
+            case ADD_ORDER:{
+                final Order order = (Order) inputStream.readObject();
+                synchronized (database){
+                    database.addOrder(order);
+                }
+                System.out.printf("Added new Order for client %s%n", socket.toString());
+            }
+            break;
+
+            case DELETE_ORDER:{
+                final int orderId = (int) inputStream.readObject();
+                synchronized (database){
+                    database.deleteOrder(orderId);
+                }
+                System.out.printf("Deleted Order %d for client %s%n", orderId, socket.toString());
+            }
+
+            case GET_ORDERS_LIST:{
+                synchronized (database){
+                    outputStream.writeObject(database.getOrderList());
+                }
+                outputStream.flush();
+                System.out.printf("sent Order set to client %s%n", socket.toString());
+            }
+
+            case UPDATE_ORDER_ASSET_AMOUNT:{
+                final int orderId = (int) inputStream.readObject();
+                final int assetAmount = (int) inputStream.readObject();
+                synchronized (database){
+                    database.updateOrderAssetAmount(orderId,assetAmount);
+                }
+                System.out.printf("Updated Order %d set to client %s%n", orderId, socket.toString());
+            }
+
+            case ADD_TRANSACTION:{
+                final Transaction transaction = (Transaction) inputStream.readObject();
+                synchronized (database){
+                    database.addTransaction(transaction);
+                }
+                System.out.printf("Added new Transaction for client %s%n", socket.toString());
+            }
+
+            case DELETE_TRANSACTION:{
+                final int transactionId = (int) inputStream.readObject();
+                synchronized (database){
+                    database.deleteTransaction(transactionId);
+                }
+                System.out.printf("Deleted Transaction %d for client %s%n", transactionId, socket.toString());
+            }
+
+            case GET_TRANSACTIONS_LIST:{
+                synchronized (database){
+                    outputStream.writeObject(database.getTransactionsList());
+                }
+                outputStream.flush();
+                System.out.printf("sent Transaction set to client %s%n", socket.toString());
+            }
         }
     }
 

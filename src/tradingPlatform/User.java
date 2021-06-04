@@ -19,10 +19,10 @@ public class User implements Comparable<User>, Serializable {
 
     /**
      * Constructor to set values for the Person's details.
-     * @param firstName
-     * @param lastName
-     * @param userName
-     * @param password
+     * @param firstName the users firstname
+     * @param lastName the users last name
+     * @param userName the users username
+     * @param password the users password
      */
     public User(String userName, String firstName, String lastName, String password) {
         this.userName = userName;

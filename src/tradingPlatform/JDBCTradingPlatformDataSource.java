@@ -107,7 +107,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                     + ");";
 
     private static final String ADD_ORDER = "INSERT INTO orders (order_id, isbuy, organisation, asset, asset_amount, value) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String DELETE_ORDER = "DELETE FROM users WHERE order_id";
+    private static final String DELETE_ORDER = "DELETE FROM users WHERE order_id = ?";
     private static final String UPDATE_ORDER_ASSET_AMOUNT = "UPDATE orders SET asset_amount = ? WHERE order_id = ?";
     private static final String GET_ORDERS_LIST = "SELECT * FROM orders";
     private static final String GET_MAX_ORDER_ID = "SELECT MAX(order_id) FROM orders";
@@ -138,7 +138,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                     + ");";
 
     private static final String ADD_TRANSACTION = "INSERT INTO transactions (transaction_id, buyer, seller, asset, asset_amount, value) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String DELETE_TRANSACTION = "DELETE FROM transactions WHERE transaction_id";
+    private static final String DELETE_TRANSACTION = "DELETE FROM transactions WHERE transaction_id = ?";
     private static final String GET_TRANSACTIONS_LIST = "SELECT * FROM transactions ORDER BY transaction_time DESC";
     private static final String GET_MAX_TRANSACTION_ID = "SELECT MAX(transaction_id) FROM transactions";
 
@@ -500,17 +500,46 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     @Override
     public void addOrder(Order order) {
-
+        ResultSet rs;
+        try{
+            rs = getMaxOrderId.executeQuery();
+            rs.next();
+            int orderId = rs.getInt("order_id") + 1;
+            addOrder.setString(1,String.valueOf(orderId));
+            if(order.getIsBuy()){
+                addOrder.setString(2,"1");
+            } else {
+                addOrder.setString(2,"0");
+            }
+            addOrder.setString(3,order.getOrganisation());
+            addOrder.setString(4,order.getAsset());
+            addOrder.setString(5,String.valueOf(order.getAssetAmount()));
+            addOrder.setString(6,String.valueOf(order.getValue()));
+            addOrder.execute();
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public void deleteOrder(int orderId) {
-
+        try{
+            deleteOrder.setString(1,String.valueOf(orderId));
+            deleteOrder.execute();
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public void updateOrderAssetAmount(int orderId, int assetAmount) {
-
+        try {
+            updateOrderAssetAmount.setString(1, String.valueOf(assetAmount));
+            updateOrderAssetAmount.setString(2,String.valueOf(orderId));
+            updateOrderAssetAmount.execute();
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -518,7 +547,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         Set<Order> orders = new TreeSet<>();
         ResultSet rs;
         try{
-            rs = getUsersList.executeQuery();
+            rs = getOrdersList.executeQuery();
             while (rs.next()){
                 Order order = new Order();
                 order.setOrderId(rs.getInt("order_id"));
@@ -541,12 +570,14 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try{
             rs = getMaxTransactionId.executeQuery();
             rs.next();
-            addTransaction.setString(1,rs.getString("transaction_id"));
+            int transactionId = rs.getInt("transaction_id") + 1;
+            addTransaction.setString(1,String.valueOf(transactionId));
             addTransaction.setString(2,transaction.getBuyer());
             addTransaction.setString(3,transaction.getSeller());
             addTransaction.setString(4,transaction.getAsset());
             addTransaction.setString(5,String.valueOf(transaction.getAssetAmount()));
             addTransaction.setString(6,String.valueOf(transaction.getValue()));
+            addTransaction.execute();
         } catch(SQLException ex){
             ex.printStackTrace();
         }
@@ -554,7 +585,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     @Override
     public void deleteTransaction(int transactionId) {
-
+        try {
+            deleteTransaction.setString(1,String.valueOf(transactionId));
+            deleteTransaction.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
@@ -562,7 +598,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         Set<Transaction> transactions = new TreeSet<>();
         ResultSet rs;
         try{
-            rs = getUsersList.executeQuery();
+            rs = getTransactionsList.executeQuery();
             while (rs.next()){
                 Transaction transaction = new Transaction();
                 transaction.setTransactionId(rs.getInt("transaction_id"));

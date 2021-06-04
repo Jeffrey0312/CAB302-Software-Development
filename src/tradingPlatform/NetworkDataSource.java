@@ -109,7 +109,16 @@ public class NetworkDataSource implements TradingPlatformDataSource{
 
     @Override
     public void addAsset(String asset) {
-
+        if(asset == null){
+            throw new IllegalArgumentException("The Asset name cannot be null");
+        }
+        try{
+            outputStream.writeObject(Command.ADD_ASSET);
+            outputStream.writeObject(asset);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -272,43 +281,127 @@ public class NetworkDataSource implements TradingPlatformDataSource{
 
     @Override
     public void addOrder(Order order) {
-
+        if (order.getAsset() == null){
+            throw new IllegalArgumentException("The Asset cannot be null");
+        }
+        if (order.getOrganisation() == null){
+            throw new IllegalArgumentException("The organisation cannot be null");
+        }
+        if (order.getAssetAmount() < 0){
+            throw new IllegalArgumentException("The Asset amount cannot be negative");
+        }
+        if (order.getValue() < 0){
+            throw new IllegalArgumentException("The Value cannot be negative");
+        }
+        try{
+            outputStream.writeObject(Command.ADD_ORDER);
+            outputStream.writeObject(order);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteOrder(int orderId) {
-
+        if (orderId < 0){
+            throw new IllegalArgumentException("The order Id cannot be negative");
+        }
+        try {
+            outputStream.writeObject(Command.DELETE_ORDER);
+            outputStream.writeObject(orderId);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void updateOrderAssetAmount(int orderId, int assetAmount) {
-
+        if (orderId < 0){
+            throw new IllegalArgumentException("The order Id cannot be negative");
+        }
+        if (assetAmount < 0){
+            throw new IllegalArgumentException("The asset amount cannot be negative");
+        }
+        try {
+            outputStream.writeObject(Command.UPDATE_ORDER_ASSET_AMOUNT);
+            outputStream.writeObject(orderId);
+            outputStream.writeObject(assetAmount);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Set<Order> getOrderList() {
-        return null;
+        try {
+            outputStream.writeObject(Command.GET_ORDERS_LIST);
+            outputStream.flush();
+            return (Set<Order>) inputStream.readObject();
+        } catch (IOException | ClassNotFoundException | ClassCastException e) {
+            e.printStackTrace();
+            return new HashSet<>();
+        }
     }
 
     @Override
     public void addTransaction(Transaction transaction) {
-
+        if (transaction.getBuyer() == null){
+            throw new IllegalArgumentException("The Buyer cannot be null");
+        }
+        if (transaction.getSeller() == null){
+            throw new IllegalArgumentException("The Seller cannot be null");
+        }
+        if (transaction.getAsset() == null){
+            throw new IllegalArgumentException("The Asset cannot be null");
+        }
+        if (transaction.getAssetAmount() < 0){
+            throw new IllegalArgumentException("The Asset amount cannot be negative");
+        }
+        if (transaction.getValue() < 0){
+            throw new IllegalArgumentException("The Value cannot be negative");
+        }
+        try{
+            outputStream.writeObject(Command.ADD_TRANSACTION);
+            outputStream.writeObject(transaction);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteTransaction(int transactionId) {
-
+        if (transactionId < 0){
+            throw new IllegalArgumentException("The transaction Id cannot be negative");
+        }
+        try {
+            outputStream.writeObject(Command.DELETE_TRANSACTION);
+            outputStream.writeObject(transactionId);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Set<Transaction> getTransactionsList() {
-        return null;
+        try {
+            outputStream.writeObject(Command.GET_TRANSACTIONS_LIST);
+            outputStream.flush();
+            return (Set<Transaction>) inputStream.readObject();
+        } catch (IOException | ClassNotFoundException | ClassCastException e) {
+            e.printStackTrace();
+            return new HashSet<>();
+        }
     }
 
     @Override
     public int getUserSize() {
         try {
-            outputStream.writeObject(Command.GET_SIZE);
+            outputStream.writeObject(Command.GET_USERS_SIZE);
             outputStream.flush();
             // read the organisation's details back from the server
             return inputStream.readInt();
