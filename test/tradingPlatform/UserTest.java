@@ -23,9 +23,9 @@ class UserTest {
     }
 
     @Test
-    void setFirstname(String name) {
-        setFirstname("alex");
-        assertEquals(name,user.getFirstname());
+    void setFirstname() {
+
+
 
 
     }
@@ -37,6 +37,7 @@ class UserTest {
 
     @Test
     void setLastname() {
+
     }
 
     @Test
@@ -46,6 +47,7 @@ class UserTest {
 
     @Test
     void setUsername() {
+
     }
 
     @Test
