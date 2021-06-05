@@ -13,7 +13,8 @@ class TradingPlatformDataTest {
     public void setUpDataList() {
 
         data = new TradingPlatformData(data.data);
-//        data.addOrganisation();
+
+
     }
 
     @AfterEach
@@ -46,6 +47,7 @@ class TradingPlatformDataTest {
 
     @Test
     void getUser() {
+        assertEquals("Jack", data.getUser(null));
         
     }
 
