@@ -16,4 +16,10 @@ public class ClientUser extends User {
     public OrganisationalUnit getOrganisation() {
         return organisation;
     }
+
+    /**
+     * sets the organisation of the user
+     * @param organisation the new organisation
+     */
+    public void setOrganisation(OrganisationalUnit organisation){this.organisation = organisation;}
 }

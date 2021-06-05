@@ -13,6 +13,7 @@ public interface TradingPlatformDataSource {
      * Extracts all info related to the named organisation
      *
      * @param name name of the organisation
+     * @return information related to the organisational unit
      */
     OrganisationalUnit getOrganisation(String name);
 
@@ -32,6 +33,7 @@ public interface TradingPlatformDataSource {
 
     /**
      * gets all organisation
+     * @return set of all organisaiton names
      */
     Set<String> getOrganisationsList();
 
@@ -50,7 +52,7 @@ public interface TradingPlatformDataSource {
     void addAsset(String asset);
 
     /**
-     * changes the amount of assets an organisation has
+     * changes the amount of an asset an organisation has
      *
      * @param organisation name of the organisation that the change will happen to
      * @param asset name of the asset the change will happen to
@@ -66,28 +68,30 @@ public interface TradingPlatformDataSource {
     void deleteAsset(String name);
 
     /**
-     * Extracts all info related to the named organisation
+     * Extracts all info related to the named user
      *
-     * @param name name of the organisation
+     * @param username username of the user
+     * @return an instance of user class with the information relating to the named user
      */
-    User getUser(String name);
+    User getUser(String username);
 
     /**
      * adds a new user to the database
      *
-     * @param u name of user to add
+     * @param user the user to add
      */
-    void addUser(User u);
+    void addUser(User user);
 
     /**
      * deletes the user with the given name from the database
      *
-     * @param name name of the user to delete
+     * @param username name of the user to delete
      */
-    void deleteUser(String name);
+    void deleteUser(String username);
 
     /**
      * gets all users
+     * @return a set of all usernames
      */
     Set<String> getUsersList();
 
@@ -114,19 +118,49 @@ public interface TradingPlatformDataSource {
      */
     User login(String username, String password);
 
+    /**
+     * adds a new order to the database
+     * @param order the new order to be added
+     */
     void addOrder(Order order);
 
+    /**
+     * deletes a user from the database
+     * @param orderId the orderId of the order that is to be deleted
+     */
     void deleteOrder(int orderId);
 
+    /**
+     * update the amount of asset in an order
+     * @param orderId the orderId of the order that is having the asset amount changed
+     * @param assetAmount the new amount of assets
+     */
     void updateOrderAssetAmount(int orderId, int assetAmount);
 
+    /**
+     * gets a set of all orders
+     * @return returns a set of all orders
+     */
     Set<Order> getOrderList();
 
+    /**
+     * adds a new transaction to the transaction table
+     * @param transaction the new transaction that will be added
+     */
     void addTransaction(Transaction transaction);
 
+    /**
+     * delete a transaction from the transaction table
+     * @param transactionId the transactionId of the transaction being deleted
+     */
     void deleteTransaction(int transactionId);
 
+    /**
+     * gets a set of all transactions
+     * @return returns a set of all transactions
+     */
     Set<Transaction> getTransactionsList();
+
     /**
      * Gets the number of user in the user list.
      * @return size of user list.
