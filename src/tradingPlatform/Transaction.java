@@ -24,7 +24,7 @@ public class Transaction {
      * @param assetAmount the amount of the asset being traded
      * @param value the value of per 1 amount of asset
      */
-    public Transaction(String buyer, String seller, String asset,Integer assetAmount,Integer value){
+    public Transaction(int transactionId ,String buyer, String seller, String asset,Integer assetAmount,Integer value){
         this.buyer = buyer;
         this.seller = seller;
         this.asset = asset;

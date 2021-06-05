@@ -13,6 +13,12 @@ class OrderTest {
     @BeforeEach
     void setUp() {
         order = new Order(0,true, "Telstra", "CPU", 100, 10);
+        order.setOrderId(1);
+        order.setIsBuy(false);
+        order.setOrganisation("Apple");
+        order.setAsset("C");
+        order.setAssetAmount(10);
+        order.setValue(100);
     }
 
     @AfterEach
@@ -21,55 +27,33 @@ class OrderTest {
 
     @Test
     void getOrderId() {
-        assertEquals(0, order.getOrderId());
-    }
-
-    @Test
-    void setOrderId() {
+        assertEquals(1, order.getOrderId());
     }
 
     @Test
     void getIsBuy() {
-        assertEquals(true, order.getIsBuy());
+        assertEquals(false, order.getIsBuy());
     }
 
-    @Test
-    void setIsBuy() {
-    }
 
     @Test
     void getOrganisation() {
-        assertEquals("Telstra", order.getOrganisation());
-    }
-
-    @Test
-    void setOrganisation() {
+        assertEquals("Apple", order.getOrganisation());
     }
 
     @Test
     void getAsset() {
-        assertEquals("CPU", order.getAsset());
-    }
-
-    @Test
-    void setAsset() {
+        assertEquals("C", order.getAsset());
     }
 
     @Test
     void getAssetAmount() {
-        assertEquals(100, order.getAssetAmount());
+        assertEquals(10, order.getAssetAmount());
     }
 
-    @Test
-    void setAssetAmount() {
-    }
 
     @Test
     void getValue() {
-        assertEquals(10,order.getValue());
-    }
-
-    @Test
-    void setValue() {
+        assertEquals(100,order.getValue());
     }
 }

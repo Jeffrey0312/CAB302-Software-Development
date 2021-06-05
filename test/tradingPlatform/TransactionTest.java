@@ -10,40 +10,50 @@ class TransactionTest {
     private Transaction transaction;
     @BeforeEach
     void setUp() {
-        transaction=new Transaction("Amy","Anna","CPU",5000,20);
+        transaction=new Transaction(0,"Amy","Anna","CPU",5000,20);
+        transaction.setTransactionId(1);
+        transaction.setBuyer("Jeffrey");
+        transaction.setSeller("Alex");
+        transaction.setAsset("software");
+        transaction.setAssetAmount(1000);
+        transaction.setValue(200);
     }
 
     @AfterEach
     void tearDown() {
     }
 
+    @Test
+    void getTransactionId(){
+        assertEquals(1, transaction.getTransactionId());
+    }
 
     @Test
     void getBuyer() {
-        assertEquals("Amy",transaction.getBuyer());
+        assertEquals("Jeffrey",transaction.getBuyer());
     }
 
     @Test
     void getSeller() {
-        assertEquals("Anna",transaction.getSeller());
+        assertEquals("Alex",transaction.getSeller());
     }
 
 
     @Test
     void getAsset() {
-        assertEquals("CPU",transaction.getAsset());
+        assertEquals("software",transaction.getAsset());
     }
 
 
     @Test
     void getAssetAmount() {
-        assertEquals(5000,transaction.getAssetAmount());
+        assertEquals(1000,transaction.getAssetAmount());
     }
 
 
     @Test
     void getValue() {
-        assertEquals(20,transaction.getValue());
+        assertEquals(200,transaction.getValue());
     }
 
 
