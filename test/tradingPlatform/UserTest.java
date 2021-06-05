@@ -23,7 +23,10 @@ class UserTest {
     }
 
     @Test
-    void setFirstname() {
+    void setFirstname(String name) {
+        setFirstname("alex");
+        assertEquals(name,user.getFirstname());
+
 
     }
 

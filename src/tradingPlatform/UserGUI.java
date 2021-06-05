@@ -711,44 +711,44 @@ public class UserGUI extends JFrame {
 
 
         private void sellPressed() {
-            if (resourceName.getText() != null && !resourceName.getText().equals("") &&
-                    resourceAmount.getText() != null && !resourceAmount.getText().equals("") &&
-                    creditPerResource.getText() != null && !creditPerResource.getText().equals("")) {
-                Transaction transaction = new Transaction(
-                        resourceName.getText(),
-                        resourceAmount.getText(),
-                        creditPerResource.getText());
-                data.addResource;
-            }
+//            if (resourceName.getText() != null && !resourceName.getText().equals("") &&
+//                    resourceAmount.getText() != null && !resourceAmount.getText().equals("") &&
+//                    creditPerResource.getText() != null && !creditPerResource.getText().equals("")) {
+//                Transaction transaction = new Transaction(
+//                        resourceName.getText(),
+//                        resourceAmount.getText(),
+//                        creditPerResource.getText());
+//                data.addResource;
+//            }
 
         }
 
 
         private void buyPressed() {
-            if (resourceName.getText() != null && !resourceName.getText().equals("") &&
-                    resourceAmount.getText() != null && !resourceAmount.getText().equals("")) {
-                Transaction transaction = new Transaction(
-                        resourceName.getText(),
-                        resourceAmount.getText(),
-                        creditPerResource.getText());
-                data.addBuy;
-
-            }
+//            if (resourceName.getText() != null && !resourceName.getText().equals("") &&
+//                    resourceAmount.getText() != null && !resourceAmount.getText().equals("")) {
+//                Transaction transaction = new Transaction(
+//                        resourceName.getText(),
+//                        resourceAmount.getText(),
+//                        creditPerResource.getText());
+//                data.addBuy;
+//
+//            }
 
 
         }
 
         private void removePressed() {
-            int index = resourceList.getSelectedIndex();
-            data.deleteReource(resourceList.getSelectedValue());
-            clearFields();
-            index--;
-            if (index == -1) {
-                if (data.getSize() != 0) {
-                    index = 0;
-                }
-            }
-            resourceList.setSelectedIndex(index);
+//            int index = resourceList.getSelectedIndex();
+//            data.deleteReource(resourceList.getSelectedValue());
+//            clearFields();
+//            index--;
+//            if (index == -1) {
+//                if (data.getSize() != 0) {
+//                    index = 0;
+//                }
+//            }
+//            resourceList.setSelectedIndex(index);
         }
 
         private void editPressed() {
@@ -762,11 +762,11 @@ public class UserGUI extends JFrame {
     private class ResourceListListener implements ListSelectionListener{
 
         public void valueChanged(ListSelectionEvent e) {
-            if (resourceList.getSelectedValue() != null
-                    && !resourceList.getSelectedValue().equals("")) {
-                displaySell(data.getResource(resourceList.getSelectedValue()),
-                        displayBuy(data.getResource(resourceList.getSelectedValue()));
-            }
+//            if (resourceList.getSelectedValue() != null
+//                    && !resourceList.getSelectedValue().equals("")) {
+//                displaySell(data.getResource(resourceList.getSelectedValue()),
+//                        displayBuy(data.getResource(resourceList.getSelectedValue());
+//            }
 
         }
     }
