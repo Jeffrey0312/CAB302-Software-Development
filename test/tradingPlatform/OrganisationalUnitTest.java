@@ -60,25 +60,5 @@ class OrganisationalUnitTest {
 
     }
 
-    @Test
-    void getAssetAmount() {
 
-
-    }
-
-    @Test
-    void setAsset() {
-    }
-
-    @Test
-    void buyAssets() {
-    }
-
-    @Test
-    void sellAssets() {
-    }
-
-    @Test
-    void cancelOrder() {
-    }
 }
