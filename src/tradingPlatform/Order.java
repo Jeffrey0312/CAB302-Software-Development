@@ -10,7 +10,7 @@ public class Order {
 
     public Order(){}
 
-    public Order(boolean isBuy, String organisation, String asset, int assetAmount, int value){
+    public Order(int orderId, boolean isBuy, String organisation, String asset, int assetAmount, int value){
         this.isBuy = isBuy;
         this.organisation = organisation;
         this.asset = asset;

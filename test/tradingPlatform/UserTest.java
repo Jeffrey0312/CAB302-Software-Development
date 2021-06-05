@@ -22,19 +22,12 @@ class UserTest {
         assertEquals("Amy",user.getFirstname());
     }
 
-    @Test
-    void setFirstname() {
-
-    }
 
     @Test
     void getLastname() {
         assertEquals("Lin",user.getLastname());
     }
 
-    @Test
-    void setLastname() {
-    }
 
     @Test
     void getUsername() {
@@ -42,7 +35,8 @@ class UserTest {
     }
 
     @Test
-    void setUsername() {
+    void setUsername() {assertEquals("AmyL",user.getUsername());
+
     }
 
     @Test
@@ -54,7 +48,5 @@ class UserTest {
     void setPassword() {
     }
 
-    @Test
-    void compareTo() {
-    }
+
 }
