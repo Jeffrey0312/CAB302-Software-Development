@@ -25,7 +25,7 @@
 
     <target name="compileTests" depends="compile" description="Compile tests" >
         <javac srcdir="test" classpath="${base}:${junitJar}:${junitPlatformJar}:${opentestJar}:${apiguardianJar}" destdir="anttestclasses" includeantruntime="false">
-            <include name="test/*.java" />
+            <include name="test/tradingPlatform/*.java" />
         </javac>
     </target>
 
