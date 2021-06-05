@@ -107,7 +107,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                     + ");";
 
     private static final String ADD_ORDER = "INSERT INTO orders (order_id, isbuy, organisation, asset, asset_amount, value) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String DELETE_ORDER = "DELETE FROM users WHERE order_id = ?";
+    private static final String DELETE_ORDER = "DELETE FROM orders WHERE order_id = ?";
     private static final String UPDATE_ORDER_ASSET_AMOUNT = "UPDATE orders SET asset_amount = ? WHERE order_id = ?";
     private static final String GET_ORDERS_LIST = "SELECT * FROM orders";
     private static final String GET_MAX_ORDER_ID = "SELECT MAX(order_id) FROM orders";
@@ -504,7 +504,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try{
             rs = getMaxOrderId.executeQuery();
             rs.next();
-            int orderId = rs.getInt("order_id") + 1;
+            int orderId = rs.getInt(1) + 1;
             addOrder.setString(1,String.valueOf(orderId));
             if(order.getIsBuy()){
                 addOrder.setString(2,"1");
@@ -535,7 +535,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     public void updateOrderAssetAmount(int orderId, int assetAmount) {
         try {
             updateOrderAssetAmount.setString(1, String.valueOf(assetAmount));
-            updateOrderAssetAmount.setString(2,String.valueOf(orderId));
+            updateOrderAssetAmount.setString(2, String.valueOf(orderId));
             updateOrderAssetAmount.execute();
         } catch(SQLException ex){
             ex.printStackTrace();
@@ -570,7 +570,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try{
             rs = getMaxTransactionId.executeQuery();
             rs.next();
-            int transactionId = rs.getInt("transaction_id") + 1;
+            int transactionId = rs.getInt(1) + 1;
             addTransaction.setString(1,String.valueOf(transactionId));
             addTransaction.setString(2,transaction.getBuyer());
             addTransaction.setString(3,transaction.getSeller());
