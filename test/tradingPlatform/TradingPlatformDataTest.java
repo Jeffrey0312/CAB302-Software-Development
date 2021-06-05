@@ -21,6 +21,7 @@ class TradingPlatformDataTest {
     public void addOrganisation() {
 //        data.addOrganisation("Telstra");
 
+
     }
 
     @Test
