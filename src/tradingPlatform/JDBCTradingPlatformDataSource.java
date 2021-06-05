@@ -336,7 +336,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @param name name of the asset to be deleted
+     * @param name name of the asset that is to be deleted
      */
     @Override
     public void deleteAsset(String name) {
