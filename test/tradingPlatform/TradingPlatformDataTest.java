@@ -8,9 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TradingPlatformDataTest {
     TradingPlatformData data;
+    OrganisationalUnit organisationalUnit;
     @BeforeEach
     public void setUpDataList() {
+
         data = new TradingPlatformData(data.data);
+//        data.addOrganisation();
     }
 
     @AfterEach
@@ -19,14 +22,13 @@ class TradingPlatformDataTest {
 
     @Test
     public void addOrganisation() {
-//        data.addOrganisation("Telstra");
-
+//      data.addOrganisation("Telstra");
 
     }
 
     @Test
-    void setOrganisationCredits()
-    {setOrganisationCredits( );
+    void setOrganisationCredits() {
+
     }
 
     @Test
@@ -44,6 +46,7 @@ class TradingPlatformDataTest {
 
     @Test
     void getUser() {
+        
     }
 
     @Test
@@ -52,6 +55,7 @@ class TradingPlatformDataTest {
 
     @Test
     void getOrganisation() {
+        assertEquals("Telstra", data.getOrganisation(null));
     }
 
     @Test
