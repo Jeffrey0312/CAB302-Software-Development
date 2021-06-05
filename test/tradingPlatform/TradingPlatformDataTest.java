@@ -24,7 +24,8 @@ class TradingPlatformDataTest {
     }
 
     @Test
-    void setOrganisationCredits() {
+    void setOrganisationCredits()
+    {setOrganisationCredits( );
     }
 
     @Test
@@ -33,6 +34,7 @@ class TradingPlatformDataTest {
 
     @Test
     void addUser() {
+
     }
 
     @Test
