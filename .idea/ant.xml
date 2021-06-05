@@ -14,6 +14,14 @@
         <entry path="file://$USER_HOME$/Documents/CAB302/IdeaProjects/prac11/lib/junit-platform-engine-1.4.2.jar" />
         <entry path="file://$USER_HOME$/Documents/CAB302/IdeaProjects/prac11/lib/junit-platform-launcher-1.4.2.jar" />
         <entry path="file://$USER_HOME$/Documents/CAB302/IdeaProjects/prac11/lib/opentest4j-1.1.1.jar" />
+        <entry path="file://$USER_HOME$/Downloads/jar_files/ant-1.10.10.jar" />
+        <entry path="file://$USER_HOME$/Downloads/jar_files/ant-junitlauncher-1.10.10.jar" />
+        <entry path="file://$USER_HOME$/Downloads/jar_files/ant-launcher-1.10.10.jar" />
+        <entry path="file://$USER_HOME$/Downloads/jar_files/apiguardian-api-1.0.0.jar" />
+        <entry path="file://$USER_HOME$/Downloads/jar_files/junit-platform-commons-1.2.0.jar" />
+        <entry path="file://$USER_HOME$/Downloads/jar_files/junit-platform-engine-1.2.0.jar" />
+        <entry path="file://$USER_HOME$/Downloads/jar_files/junit-platform-launcher-1.2.0.jar" />
+        <entry path="file://$USER_HOME$/Downloads/jar_files/opentest4j-1.1.0.jar" />
       </additionalClassPath>
     </buildFile>
   </component>
