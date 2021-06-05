@@ -19,7 +19,7 @@ public class OrganisationalUnit implements Serializable {
     }
 
     /**
-     * Constructor to set the values of
+     * Constructor to set the values of the organisational unit
      * @param organisation name of the organisation
      * @param credits amount of credits the organisation has
      * */
@@ -28,7 +28,7 @@ public class OrganisationalUnit implements Serializable {
         this.credits = credits;
     }
     /**
-     * Constructor to set the values of
+     * Constructor to set the values of the organisational unit
      * @param organisation name of the organisation
      * @param credits amount of credits the organisation has
      * @param assets the amounts of each asset the organisation has

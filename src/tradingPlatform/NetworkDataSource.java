@@ -31,6 +31,12 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * Extracts all info related to the named organisation
+     *
+     * @param organisation name of the organisation
+     * @return information related to the organisational unit
+     */
     @Override
     public OrganisationalUnit getOrganisation(String organisation) {
         try {
@@ -49,6 +55,11 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * adds a new organisation to the database
+     *
+     * @param name name of organisation to add
+     */
     @Override
     public void addOrganisation(String name) {
         if (name == null)
@@ -66,6 +77,11 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * deletes the organisation with the given name from the database
+     *
+     * @param organisation name of the organisation to delete
+     */
     @Override
     public void deleteOrganisation(String organisation) {
         try {
@@ -77,6 +93,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * gets all organisation
+     * @return set of all organisaiton names
+     */
     @Override
     public Set<String> getOrganisationsList() {
         try {
@@ -89,6 +109,12 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         return new TreeSet<>();
     }
 
+    /**
+     * changes the amount of credits the provided organisation has to the provided number of credits
+     *
+     * @param name    the name of the organisation that is having its credits changed
+     * @param credits the new value for credits
+     */
     @Override
     public void setOrganisationCredits(String name, int credits) {
         if (name == null){
@@ -107,6 +133,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * adds a new asset to the database
+     * @param asset the new asset being added
+     */
     @Override
     public void addAsset(String asset) {
         if(asset == null){
@@ -121,6 +151,12 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * changes the amount of  an asset an organisation has
+     * @param organisation name of the organisation that the change will happen to
+     * @param asset        name of the asset the change will happen to
+     * @param amount       the new amount that the amount of assets will be changed to
+     */
     @Override
     public void setOrganisationAssetAmount(String organisation, String asset, int amount) {
         if (organisation == null){
@@ -143,6 +179,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * deletes the given asset from the database
+     * @param name name of the asset that is to be deleted
+     */
     @Override
     public void deleteAsset(String name) {
         if (name == null){
@@ -157,12 +197,18 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * Extracts all info related to the named user
+     *
+     * @param username name of the organisation
+     * @return return the user with the input username
+     */
     @Override
-    public User getUser(String user) {
+    public User getUser(String username) {
         try {
             // tell the server to expect a person's name, and send us back their details
             outputStream.writeObject(Command.GET_USER);
-            outputStream.writeObject(user);
+            outputStream.writeObject(username);
 
             // flush because if we don't, the request might not get sent yet, and we're waiting for a response
             outputStream.flush();
@@ -175,17 +221,22 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * adds a new user to the database
+     *
+     * @param user the user to add
+     */
     @Override
-    public void addUser(User u) {
-        if (u == null)
+    public void addUser(User user) {
+        if (user == null)
             throw new IllegalArgumentException("The User cannot be null");
-        if (u.getUsername() == null)
+        if (user.getUsername() == null)
             throw new IllegalArgumentException("The User username cannot be null");
-        if (u.getPassword() == null)
+        if (user.getPassword() == null)
             throw new IllegalArgumentException("The User password cannot be null");
-        if (u.getFirstname() == null)
+        if (user.getFirstname() == null)
             throw new IllegalArgumentException("The User first cannot be null");
-        if (u.getLastname() == null)
+        if (user.getLastname() == null)
             throw new IllegalArgumentException("The User lastname cannot be null");
 
         try {
@@ -193,13 +244,18 @@ public class NetworkDataSource implements TradingPlatformDataSource{
             outputStream.writeObject(Command.ADD_USER);
 
             // send the actual data
-            outputStream.writeObject(u);
+            outputStream.writeObject(user);
             outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * sets the organisation of the user
+     * @param username the username of the user being changed
+     * @param organisation the new organisation
+     */
     @Override
     public void setUserOrganisation(String username, String organisation) {
         if (username == null){
@@ -218,6 +274,11 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * sets the password of the user
+     * @param username the username of the user being changed
+     * @param password the new password
+     */
     @Override
     public void setUserPassword(String username, String password) {
         if (username == null){
@@ -236,17 +297,26 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * deletes the user with the given name from the database
+     *
+     * @param username name of the user to delete
+     */
     @Override
-    public void deleteUser(String user) {
+    public void deleteUser(String username) {
         try {
             outputStream.writeObject(Command.DELETE_USER);
-            outputStream.writeObject(user);
+            outputStream.writeObject(username);
             outputStream.flush();
         } catch (IOException | ClassCastException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * gets all users
+     * @return a set of all usernames
+     */
     @Override
     public Set<String> getUsersList() {
         try {
@@ -259,6 +329,13 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * used to attempt to login to the system
+     *
+     * @param username username of the user attempting to login
+     * @param password password of the user attempting to login
+     * @return returns an instance of the user class with the users info if inputs are correct other wise returns null
+     */
     @Override
     public User login(String username, String password) {
         if (username == null){
@@ -279,6 +356,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         return null;
     }
 
+    /**
+     * adds a new order to the database
+     * @param order the new order to be added
+     */
     @Override
     public void addOrder(Order order) {
         if (order.getAsset() == null){
@@ -302,6 +383,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * deletes a user from the database
+     * @param orderId the orderId of the order that is to be deleted
+     */
     @Override
     public void deleteOrder(int orderId) {
         if (orderId < 0){
@@ -316,6 +401,11 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * update the amount of asset in an order
+     * @param orderId the orderId of the order that is having the asset amount changed
+     * @param assetAmount the new amount of assets
+     */
     @Override
     public void updateOrderAssetAmount(int orderId, int assetAmount) {
         if (orderId < 0){
@@ -334,6 +424,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * gets a set of all orders
+     * @return returns a set of all orders
+     */
     @Override
     public Set<Order> getOrderList() {
         try {
@@ -346,6 +440,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * adds a new transaction to the transaction table
+     * @param transaction the new transaction that will be added
+     */
     @Override
     public void addTransaction(Transaction transaction) {
         if (transaction.getBuyer() == null){
@@ -372,6 +470,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * delete a transaction from the transaction table
+     * @param transactionId the transactionId of the transaction being deleted
+     */
     @Override
     public void deleteTransaction(int transactionId) {
         if (transactionId < 0){
@@ -386,6 +488,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * gets a set of all transactions
+     * @return returns a set of all transactions
+     */
     @Override
     public Set<Transaction> getTransactionsList() {
         try {
@@ -398,6 +504,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * Gets the number of user in the user list.
+     * @return size of user list.
+     */
     @Override
     public int getUserSize() {
         try {
@@ -411,6 +521,10 @@ public class NetworkDataSource implements TradingPlatformDataSource{
         }
     }
 
+    /**
+     * Finalizes any resources used by the data source and ensures data is
+     * persisted.
+     */
     @Override
     public void close() {
     }

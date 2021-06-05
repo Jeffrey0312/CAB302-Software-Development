@@ -12,7 +12,7 @@ class OrderTest {
 
     @BeforeEach
     void setUp() {
-        order = new Order(0,true, "Telstra", "CPU", 100, 10);
+        order = new Order(true, "Telstra", "CPU", 100, 10);
         order.setOrderId(1);
         order.setIsBuy(false);
         order.setOrganisation("Apple");
