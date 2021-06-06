@@ -24,8 +24,8 @@
     </target>
 
     <target name="compileTests" depends="compile" description="Compile tests" >
-        <javac srcdir="test" classpath="${base}:${junitJar}:${junitPlatformJar}:${opentestJar}:${apiguardianJar}" destdir="anttestclasses" includeantruntime="false">
-            <include name="test/tradingPlatform/*.java" />
+        <javac srcdir="test" classpath="${base}:${junitpath}" destdir="anttestclasses" includeantruntime="false">
+            <include name="tradingPlatform/*.java" />
         </javac>
     </target>
 
@@ -33,7 +33,7 @@
         <junitlauncher printSummary="true" failureProperty="junit.failure">
             <classpath>
                 <pathelement path="anttestclasses:${base}" />
-                <pathelement path="${junitpath}" />
+                <pathelement path="${junitJar}:${junitPlatformJar}:${opentestJar}:${apiguardianJar}" />
             </classpath>
             <testclasses outputDir="${testBase}">
                 <fileset dir="anttestclasses"/>
@@ -43,7 +43,7 @@
         <fail if="junit.failure" message="junit tests failed - aborting"/>
     </target>
 
-    <target name="build" depends="utest" >
+    <target name="build" depends="compileTests" >
         <jar destfile="302.jar" basedir="${base}">
             <manifest>
                 <!-- Who is building this jar? -->
@@ -57,7 +57,7 @@
     </target>
 
     <target name="doc">
-        <javadoc packagenames="major assignment"
+        <javadoc packagenames="tradingPlatform"
                  sourcepath="src"
                  destdir="doc"
                  author="true"

@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 public class NetworkDataSource implements TradingPlatformDataSource{
     private static final String HOSTNAME = "127.0.0.1";
-    private static final int PORT = 10000;
+    private static final int PORT = 20000;
 
     private Socket socket;
     private ObjectOutputStream outputStream;

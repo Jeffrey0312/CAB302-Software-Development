@@ -41,7 +41,7 @@ class UserTest {
 
     @Test
     void getPassword() {
-        assertEquals("AL123",user.getPassword());
+        assertEquals("123",user.getPassword());
     }
 
     @Test

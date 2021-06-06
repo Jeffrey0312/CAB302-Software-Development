@@ -12,7 +12,7 @@ class TradingPlatformDataTest {
     @BeforeEach
     public void setUpDataList() {
 
-        data = new TradingPlatformData(data.data);
+
 
 
     }
@@ -47,7 +47,7 @@ class TradingPlatformDataTest {
 
     @Test
     void getUser() {
-        assertEquals("Jack", data.getUser(null));
+
         
     }
 
@@ -57,7 +57,7 @@ class TradingPlatformDataTest {
 
     @Test
     void getOrganisation() {
-        assertEquals("Telstra", data.getOrganisation(null));
+
     }
 
     @Test

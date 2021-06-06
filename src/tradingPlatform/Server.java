@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
-    private static final int PORT = 10000;
+    private static final int PORT = 20000;
 
     /**
      * this is the timeout inbetween accepting clients, not reading from the socket itself.

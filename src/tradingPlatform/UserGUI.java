@@ -139,13 +139,7 @@ public class UserGUI extends JFrame {
         return scrollPane;
 
     }
-//    private JPanel buttonFieldPanel_3() {
-//        JPanel resourceBuyButtonField = new JPanel();
-//        JButton button_5 = new JButton("BUY");
-//        resourceBuyButtonField.add(button_5);
-//        resourceBuyButtonField.setMaximumSize(new Dimension(700, 50));
-//        return resourceBuyButtonField;
-//    }
+
 
 
     //start of the offer page
@@ -168,11 +162,6 @@ public class UserGUI extends JFrame {
         JButton search = new JButton("Search");
         searchField_2.add(tf);
         searchField_2.add(search);
-
-//        String[] sourceStrings = {"SELL", "BUY"};
-//        JComboBox sourceList = new JComboBox(sourceStrings);
-//        sourceList.setSelectedIndex(1);
-//        searchField_2.add(sourceList);
         searchField_2.setMaximumSize(new Dimension(1000, 50));
         return searchField_2;
     }
@@ -238,12 +227,6 @@ public class UserGUI extends JFrame {
         layout.setAutoCreateContainerGaps(true);
 
 
-//        String[] sourceList = {"", "Hard Disk", "RAM"};
-//        JLabel availableResourceFieldLabel = new JLabel("Available Resource: ");
-//        JLabel resourceTypeFieldLabel = new JLabel("Resource Type: ");
-//        JLabel salesAmountFieldLabel = new JLabel("Sales Amount: ");
-//        JLabel creditsFieldLabel = new JLabel("Credits per Resource: ");
-//        JLabel estimateCreditsFieldLabel = new JLabel("Estimate Credits Income: ");
 
 
         JLabel resourceNameLabel = new JLabel("Resource Name:");
@@ -254,45 +237,7 @@ public class UserGUI extends JFrame {
         creditPerResource = new JTextField(20);
         resourceAmount = new JTextField(20);
 
-//        resourceType = new JTextField(20);
-//        salesAmount = new JTextField(20);
-//        credits = new JTextField(20);
-//        estimateCredits = new JTextField(20);
-//        JComboBox resourceList = new JComboBox(sourceList);
-//        GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-//        hGroup.addGroup(layout.createParallelGroup()
-//                .addComponent(availableResourceFieldLabel)
-//                .addComponent(resourceTypeFieldLabel)
-//                .addComponent(salesAmountFieldLabel)
-//                .addComponent(creditsFieldLabel)
-//                .addComponent(estimateCreditsFieldLabel));
-//        hGroup.addGroup(layout.createParallelGroup()
-//                .addComponent(resourceType)
-//                .addComponent(salesAmount)
-//                .addComponent(credits)
-//                .addComponent(estimateCredits)
-//                .addComponent(resourceList));
-//        layout.setHorizontalGroup(hGroup);
-//
-//        GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
-//        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-//                .addComponent(availableResourceFieldLabel)
-//                .addComponent(resourceList));
-//        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-//                .addComponent(resourceTypeFieldLabel)
-//                .addComponent(resourceType));
-//        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-//                .addComponent(salesAmountFieldLabel)
-//                .addComponent(salesAmount));
-//        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-//                .addComponent(creditsFieldLabel)
-//                .addComponent(credits));
-//        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-//                .addComponent(estimateCreditsFieldLabel)
-//                .addComponent(estimateCredits));
-//        layout.setVerticalGroup(vGroup);
-//        content.setMaximumSize(new Dimension(500, 190));
-//        content.setBackground(Color.WHITE);
+
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
 
 
