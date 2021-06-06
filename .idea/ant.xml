@@ -13,6 +13,7 @@
         <entry path="file://$USER_HOME$/Documents/CAB302/IdeaProjects/prac11/lib/junit-platform-engine-1.4.2.jar" />
         <entry path="file://$USER_HOME$/Documents/CAB302/IdeaProjects/prac11/lib/junit-platform-launcher-1.4.2.jar" />
         <entry path="file://$USER_HOME$/Documents/CAB302/IdeaProjects/prac11/lib/opentest4j-1.1.1.jar" />
+        <entry path="file://$PROJECT_DIR$/lib" />
       </additionalClassPath>
     </buildFile>
   </component>
